@@ -896,6 +896,11 @@
             </div>
 
             <div class="input-group">
+                <label for="player-class">Ta classe</label>
+                <input type="text" id="player-class" placeholder="Ex: 5ème A, 5B..." maxlength="15">
+            </div>
+
+            <div class="input-group">
                 <label>Choisis tes tables</label>
                 <div class="tables-selection">
                     <input type="checkbox" class="table-checkbox" id="table-2" value="2" checked>
@@ -1071,6 +1076,9 @@
             </div>
 
             <div class="history-filters">
+                <select id="history-filter-class">
+                    <option value="">Toutes les classes</option>
+                </select>
                 <select id="history-filter-player">
                     <option value="">Tous les joueurs</option>
                 </select>
@@ -1106,6 +1114,7 @@
         // Game State
         let gameState = {
             playerName: '',
+            playerClass: '',
             level: 1,
             xp: 0,
             totalScore: 0,
@@ -1223,6 +1232,7 @@
             if (saved) {
                 const data = JSON.parse(saved);
                 gameState.playerName = data.playerName || '';
+                gameState.playerClass = data.playerClass || '';
                 gameState.level = data.level || 1;
                 gameState.xp = data.xp || 0;
                 gameState.totalScore = data.totalScore || 0;
@@ -1234,12 +1244,14 @@
                 gameState.powerups = data.powerups || { freeze: 3, double: 2, skip: 1 };
 
                 document.getElementById('player-name').value = gameState.playerName;
+                document.getElementById('player-class').value = gameState.playerClass;
             }
         }
 
         function saveGameState() {
             const data = {
                 playerName: gameState.playerName,
+                playerClass: gameState.playerClass,
                 level: gameState.level,
                 xp: gameState.xp,
                 totalScore: gameState.totalScore,
@@ -1281,6 +1293,7 @@
         // Start Game
         function startGame() {
             gameState.playerName = document.getElementById('player-name').value.trim() || 'Joueur';
+            gameState.playerClass = document.getElementById('player-class').value.trim() || '';
 
             gameState.selectedTables = [];
             document.querySelectorAll('.table-checkbox:checked').forEach(cb => {
@@ -1644,6 +1657,7 @@
             const gameRecord = {
                 id: Date.now(),
                 playerName: gameState.playerName,
+                playerClass: gameState.playerClass,
                 date: new Date().toISOString(),
                 score: gameState.currentScore,
                 correctAnswers: gameState.correctAnswers,
@@ -1754,9 +1768,20 @@
         }
 
         function updateHistoryFilters() {
+            // Filtre par classe
+            const classFilter = document.getElementById('history-filter-class');
+            const classes = [...new Set(gameState.gameHistory.map(g => g.playerClass).filter(c => c))];
+            classFilter.innerHTML = '<option value="">Toutes les classes</option>';
+            classes.sort().forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls;
+                option.textContent = cls;
+                classFilter.appendChild(option);
+            });
+
+            // Filtre par joueur
             const playerFilter = document.getElementById('history-filter-player');
             const players = [...new Set(gameState.gameHistory.map(g => g.playerName))];
-
             playerFilter.innerHTML = '<option value="">Tous les joueurs</option>';
             players.forEach(player => {
                 const option = document.createElement('option');
@@ -1767,10 +1792,16 @@
         }
 
         function renderHistory() {
+            const classFilter = document.getElementById('history-filter-class').value;
             const playerFilter = document.getElementById('history-filter-player').value;
             const periodFilter = document.getElementById('history-filter-period').value;
 
             let filteredHistory = [...gameState.gameHistory];
+
+            // Filter by class
+            if (classFilter) {
+                filteredHistory = filteredHistory.filter(g => g.playerClass === classFilter);
+            }
 
             // Filter by player
             if (playerFilter) {
@@ -1819,9 +1850,10 @@
                 const difficultyClass = `difficulty-${game.difficulty}`;
                 const difficultyLabel = { easy: 'Facile', medium: 'Normal', hard: 'Difficile', extreme: 'Extrême' }[game.difficulty];
 
+                const classDisplay = game.playerClass ? ` (${game.playerClass})` : '';
                 entry.innerHTML = `
                     <div class="history-entry-header">
-                        <span>${game.playerName} - ${dateStr} ${timeStr}</span>
+                        <span>${game.playerName}${classDisplay} - ${dateStr} ${timeStr}</span>
                         <span class="score">${game.score} pts</span>
                     </div>
                     <div class="history-entry-details">
@@ -1842,6 +1874,7 @@
         }
 
         // Add event listeners for filters
+        document.getElementById('history-filter-class').addEventListener('change', renderHistory);
         document.getElementById('history-filter-player').addEventListener('change', renderHistory);
         document.getElementById('history-filter-period').addEventListener('change', renderHistory);
 
@@ -1852,10 +1885,11 @@
                 return;
             }
 
-            const headers = ['Date', 'Joueur', 'Score', 'Bonnes réponses', 'Mauvaises réponses', 'Combo max', 'Précision', 'Difficulté', 'Tables'];
+            const headers = ['Date', 'Joueur', 'Classe', 'Score', 'Bonnes réponses', 'Mauvaises réponses', 'Combo max', 'Précision', 'Difficulté', 'Tables'];
             const rows = gameState.gameHistory.map(g => [
                 new Date(g.date).toLocaleString('fr-FR'),
                 g.playerName,
+                g.playerClass || '',
                 g.score,
                 g.correctAnswers,
                 g.wrongAnswers,
