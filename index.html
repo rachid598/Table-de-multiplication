@@ -2,7 +2,17 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Application d'entraînement aux tables de multiplication avec gamification">
+    <meta name="theme-color" content="#6c5ce7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tables Multi">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
     <title>Tables de Multiplication - Entraînement</title>
     <style>
         * {
@@ -39,34 +49,38 @@
             width: 100%;
             max-width: 500px;
             overflow: hidden;
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .header h1 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             margin-bottom: 5px;
         }
 
         .stats-bar {
             display: flex;
             justify-content: space-around;
-            margin-top: 15px;
+            margin-top: 10px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .stat {
             background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .stat span {
@@ -76,8 +90,10 @@
         /* Screens */
         .screen {
             display: none;
-            padding: 30px 20px;
+            padding: 20px;
             animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            flex: 1;
         }
 
         .screen.active {
@@ -96,29 +112,30 @@
 
         .welcome-screen h2 {
             color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
         }
 
         .welcome-screen .emoji {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
 
         .input-group {
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--dark);
             font-weight: 600;
+            font-size: 0.9rem;
         }
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid var(--light);
             border-radius: 10px;
             font-size: 1rem;
@@ -134,12 +151,12 @@
             background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
+            padding: 12px 30px;
+            font-size: 1rem;
             border-radius: 30px;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            margin: 10px 5px;
+            margin: 8px 4px;
         }
 
         .btn:hover {
@@ -159,9 +176,14 @@
             background: linear-gradient(135deg, var(--secondary) 0%, #81ecec 100%);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #ffeaa7 100%);
+            color: var(--dark);
+        }
+
         .btn-small {
-            padding: 10px 20px;
-            font-size: 0.9rem;
+            padding: 8px 16px;
+            font-size: 0.85rem;
         }
 
         /* Game Screen */
@@ -173,7 +195,7 @@
             height: 8px;
             background: var(--light);
             border-radius: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
@@ -193,11 +215,11 @@
         }
 
         .combo-display {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--accent);
             font-weight: bold;
-            margin-bottom: 10px;
-            min-height: 30px;
+            margin-bottom: 8px;
+            min-height: 25px;
         }
 
         .combo-display.active {
@@ -210,9 +232,9 @@
         }
 
         .question {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--dark);
-            margin: 20px 0;
+            margin: 15px 0;
             font-weight: bold;
         }
 
@@ -221,13 +243,13 @@
         }
 
         .answer-input {
-            width: 150px;
-            padding: 20px;
-            font-size: 2rem;
+            width: 130px;
+            padding: 15px;
+            font-size: 1.8rem;
             text-align: center;
             border: 3px solid var(--light);
             border-radius: 15px;
-            margin: 20px auto;
+            margin: 15px auto;
             display: block;
         }
 
@@ -262,14 +284,14 @@
         .numpad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            max-width: 300px;
+            gap: 8px;
+            max-width: 280px;
             margin: 0 auto;
         }
 
         .numpad-btn {
-            padding: 20px;
-            font-size: 1.5rem;
+            padding: 18px;
+            font-size: 1.4rem;
             border: none;
             border-radius: 10px;
             background: var(--light);
@@ -301,17 +323,17 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin: 20px 0;
+            margin: 15px 0;
             flex-wrap: wrap;
         }
 
         .powerup {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             transition: all 0.2s;
             position: relative;
         }
@@ -343,10 +365,10 @@
             right: -5px;
             background: var(--danger);
             color: white;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -359,29 +381,30 @@
 
         .results-screen h2 {
             color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
         }
 
         .score-display {
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--success);
             font-weight: bold;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .results-stats {
             background: var(--light);
             border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 15px;
+            margin: 15px 0;
         }
 
         .results-stat {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
         }
 
         .results-stat:last-child {
@@ -391,9 +414,9 @@
         .new-badge {
             background: var(--warning);
             color: var(--dark);
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 10px;
-            margin: 10px 0;
+            margin: 8px 0;
             animation: badgePopup 0.5s ease;
         }
 
@@ -410,19 +433,19 @@
 
         .badges-screen h2 {
             color: var(--primary);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .badges-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .badge {
             background: var(--light);
-            padding: 15px;
-            border-radius: 15px;
+            padding: 12px;
+            border-radius: 12px;
             transition: all 0.3s;
         }
 
@@ -436,12 +459,12 @@
         }
 
         .badge-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 5px;
         }
 
         .badge-name {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             color: var(--dark);
         }
@@ -453,22 +476,120 @@
 
         .leaderboard h3 {
             color: var(--primary);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .leaderboard-entry {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
+            padding: 8px 12px;
             background: var(--light);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .leaderboard-entry.highlight {
             background: linear-gradient(135deg, var(--primary), #a29bfe);
             color: white;
+        }
+
+        /* History Screen */
+        .history-screen {
+            text-align: center;
+        }
+
+        .history-screen h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .history-filters select {
+            padding: 8px 12px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-entry {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .history-entry-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .history-entry-header .score {
+            color: var(--success);
+        }
+
+        .history-entry-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .history-stats-summary {
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .history-stats-summary h3 {
+            margin-bottom: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .summary-item .label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
         }
 
         /* Floating Points */
@@ -525,13 +646,13 @@
         }
 
         .level-up-content h2 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--warning);
             margin-bottom: 10px;
         }
 
         .level-up-content p {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
 
         @keyframes levelUpPop {
@@ -549,47 +670,81 @@
             z-index: 999;
         }
 
+        /* Install Banner */
+        .install-banner {
+            display: none;
+            background: linear-gradient(135deg, var(--success), #55efc4);
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .install-banner.show {
+            display: block;
+        }
+
+        /* Offline indicator */
+        .offline-indicator {
+            display: none;
+            background: var(--warning);
+            color: var(--dark);
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 480px) {
             .header h1 {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .stat {
-                padding: 5px 10px;
-                font-size: 0.8rem;
+                padding: 4px 8px;
+                font-size: 0.75rem;
             }
 
             .question {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .answer-input {
-                width: 120px;
-                padding: 15px;
-                font-size: 1.5rem;
+                width: 100px;
+                padding: 12px;
+                font-size: 1.4rem;
             }
 
             .numpad-btn {
-                padding: 15px;
+                padding: 14px;
                 font-size: 1.2rem;
             }
 
             .badges-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
+                gap: 8px;
             }
 
             .badge {
-                padding: 10px;
+                padding: 8px;
             }
 
             .badge-icon {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .badge-name {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
 
@@ -598,8 +753,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 8px;
+            margin: 10px 0;
         }
 
         .table-checkbox {
@@ -607,16 +762,17 @@
         }
 
         .table-label {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--light);
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            font-size: 0.9rem;
         }
 
         .table-checkbox:checked + .table-label {
@@ -632,35 +788,100 @@
         .daily-challenge {
             background: linear-gradient(135deg, #f093fb, #f5576c);
             color: white;
-            padding: 15px;
-            border-radius: 15px;
-            margin: 20px 0;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 15px 0;
             text-align: center;
         }
 
         .daily-challenge h3 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1rem;
         }
 
         .streak-display {
-            font-size: 1.2rem;
-            margin-top: 10px;
+            font-size: 1rem;
+            margin-top: 8px;
         }
 
         .streak-fire {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light);
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Difficulty tables (for history) */
+        .difficulty-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .difficulty-easy { background: var(--success); color: white; }
+        .difficulty-medium { background: var(--secondary); color: white; }
+        .difficulty-hard { background: var(--warning); color: var(--dark); }
+        .difficulty-extreme { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
+    <!-- Install Banner -->
+    <div class="install-banner" id="install-banner" onclick="installApp()">
+        Installer l'application pour jouer hors-ligne !
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+        Mode hors-ligne
+    </div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
             <h1>Tables de Multiplication</h1>
             <div class="stats-bar">
-                <div class="stat">Niveau: <span id="level">1</span></div>
+                <div class="stat">Niv: <span id="level">1</span></div>
                 <div class="stat">XP: <span id="xp">0</span>/<span id="xp-max">100</span></div>
-                <div class="stat">Score: <span id="total-score">0</span></div>
+                <div class="stat">Total: <span id="total-score">0</span></div>
             </div>
         </div>
 
@@ -675,7 +896,7 @@
             </div>
 
             <div class="input-group">
-                <label>Choisis tes tables (clique pour sélectionner)</label>
+                <label>Choisis tes tables</label>
                 <div class="tables-selection">
                     <input type="checkbox" class="table-checkbox" id="table-2" value="2" checked>
                     <label class="table-label" for="table-2">2</label>
@@ -705,10 +926,10 @@
             <div class="input-group">
                 <label for="difficulty">Difficulté</label>
                 <select id="difficulty">
-                    <option value="easy">Facile (20 secondes)</option>
-                    <option value="medium" selected>Normal (15 secondes)</option>
-                    <option value="hard">Difficile (10 secondes)</option>
-                    <option value="extreme">Extrême (7 secondes)</option>
+                    <option value="easy">Facile (20s)</option>
+                    <option value="medium" selected>Normal (15s)</option>
+                    <option value="hard">Difficile (10s)</option>
+                    <option value="extreme">Extrême (7s)</option>
                 </select>
             </div>
 
@@ -721,7 +942,11 @@
             </div>
 
             <button class="btn" onclick="startGame()">Commencer !</button>
-            <button class="btn btn-secondary" onclick="showBadges()">Mes Badges</button>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary btn-small" onclick="showBadges()">Badges</button>
+                <button class="btn btn-warning btn-small" onclick="showHistory()">Historique</button>
+            </div>
         </div>
 
         <!-- Game Screen -->
@@ -743,11 +968,11 @@
                     ❄️
                     <span class="powerup-count" id="freeze-count">3</span>
                 </button>
-                <button class="powerup powerup-double" id="powerup-double" onclick="usePowerup('double')" title="Double points (prochain)">
+                <button class="powerup powerup-double" id="powerup-double" onclick="usePowerup('double')" title="Double points">
                     ⭐
                     <span class="powerup-count" id="double-count">2</span>
                 </button>
-                <button class="powerup powerup-skip" id="powerup-skip" onclick="usePowerup('skip')" title="Passer la question">
+                <button class="powerup powerup-skip" id="powerup-skip" onclick="usePowerup('skip')" title="Passer">
                     ⏭️
                     <span class="powerup-count" id="skip-count">1</span>
                 </button>
@@ -818,6 +1043,54 @@
 
             <button class="btn" onclick="showWelcome()">Retour</button>
         </div>
+
+        <!-- History Screen -->
+        <div class="screen history-screen" id="history-screen">
+            <h2>📊 Historique</h2>
+
+            <div class="history-stats-summary" id="stats-summary">
+                <h3>Statistiques globales</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="value" id="total-games">0</div>
+                        <div class="label">Parties</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value" id="total-correct">0</div>
+                        <div class="label">Bonnes rép.</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value" id="avg-score">0</div>
+                        <div class="label">Score moyen</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value" id="best-score">0</div>
+                        <div class="label">Meilleur</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-filters">
+                <select id="history-filter-player">
+                    <option value="">Tous les joueurs</option>
+                </select>
+                <select id="history-filter-period">
+                    <option value="all">Toutes les dates</option>
+                    <option value="today">Aujourd'hui</option>
+                    <option value="week">Cette semaine</option>
+                    <option value="month">Ce mois</option>
+                </select>
+            </div>
+
+            <div class="history-list" id="history-list"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-small btn-secondary" onclick="exportCSV()">Exporter CSV</button>
+                <button class="btn btn-small btn-warning" onclick="exportJSON()">Exporter JSON</button>
+            </div>
+
+            <button class="btn" onclick="showWelcome()">Retour</button>
+        </div>
     </div>
 
     <!-- Level Up Overlay -->
@@ -858,10 +1131,12 @@
             },
             badges: [],
             highScores: [],
+            gameHistory: [],
             streak: 0,
             lastPlayDate: null,
             dailyGoal: 500,
-            dailyProgress: 0
+            dailyProgress: 0,
+            questionsHistory: []
         };
 
         // Badge Definitions
@@ -886,12 +1161,60 @@
         // XP required per level
         const xpPerLevel = (level) => Math.floor(100 * Math.pow(1.5, level - 1));
 
+        // PWA Installation
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-banner').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('install-banner').classList.remove('show');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // Offline detection
+        window.addEventListener('online', () => {
+            document.getElementById('offline-indicator').classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offline-indicator').classList.add('show');
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker enregistré:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Erreur Service Worker:', error);
+                    });
+            });
+        }
+
         // Initialize
         function init() {
             loadGameState();
             updateHeader();
             updateStreak();
             updatePowerupDisplay();
+
+            // Check offline status on load
+            if (!navigator.onLine) {
+                document.getElementById('offline-indicator').classList.add('show');
+            }
         }
 
         // Load/Save Game State
@@ -905,6 +1228,7 @@
                 gameState.totalScore = data.totalScore || 0;
                 gameState.badges = data.badges || [];
                 gameState.highScores = data.highScores || [];
+                gameState.gameHistory = data.gameHistory || [];
                 gameState.streak = data.streak || 0;
                 gameState.lastPlayDate = data.lastPlayDate;
                 gameState.powerups = data.powerups || { freeze: 3, double: 2, skip: 1 };
@@ -921,6 +1245,7 @@
                 totalScore: gameState.totalScore,
                 badges: gameState.badges,
                 highScores: gameState.highScores,
+                gameHistory: gameState.gameHistory,
                 streak: gameState.streak,
                 lastPlayDate: gameState.lastPlayDate,
                 powerups: gameState.powerups
@@ -955,10 +1280,8 @@
 
         // Start Game
         function startGame() {
-            // Get player name
             gameState.playerName = document.getElementById('player-name').value.trim() || 'Joueur';
 
-            // Get selected tables
             gameState.selectedTables = [];
             document.querySelectorAll('.table-checkbox:checked').forEach(cb => {
                 gameState.selectedTables.push(parseInt(cb.value));
@@ -969,7 +1292,6 @@
                 return;
             }
 
-            // Get difficulty
             gameState.difficulty = document.getElementById('difficulty').value;
             switch(gameState.difficulty) {
                 case 'easy': gameState.timePerQuestion = 20; break;
@@ -978,21 +1300,16 @@
                 case 'extreme': gameState.timePerQuestion = 7; break;
             }
 
-            // Reset game state
             gameState.currentScore = 0;
             gameState.combo = 0;
             gameState.maxCombo = 0;
             gameState.correctAnswers = 0;
             gameState.wrongAnswers = 0;
             gameState.dailyProgress = 0;
+            gameState.questionsHistory = [];
 
-            // Show game screen
             showScreen('game-screen');
-
-            // Generate first question
             generateQuestion();
-
-            // Focus input
             document.getElementById('answer-input').focus();
         }
 
@@ -1011,10 +1328,7 @@
             document.getElementById('answer-input').value = '';
             document.getElementById('answer-input').className = 'answer-input';
 
-            // Reset and start timer
             startTimer();
-
-            // Update combo display
             updateComboDisplay();
         }
 
@@ -1102,6 +1416,16 @@
 
             clearInterval(gameState.timerInterval);
 
+            // Record question
+            gameState.questionsHistory.push({
+                num1: gameState.currentNum1,
+                num2: gameState.currentNum2,
+                correctAnswer: correctAnswer,
+                userAnswer: userAnswer,
+                isCorrect: userAnswer === correctAnswer,
+                timeUsed: gameState.timePerQuestion - gameState.timeRemaining
+            });
+
             if (userAnswer === correctAnswer) {
                 correctAnswerHandler();
             } else {
@@ -1113,14 +1437,10 @@
             const input = document.getElementById('answer-input');
             input.classList.add('correct');
 
-            // Calculate points
             let points = 10;
-
-            // Time bonus
             const timeBonus = Math.floor(gameState.timeRemaining * 2);
             points += timeBonus;
 
-            // Combo bonus
             gameState.combo++;
             if (gameState.combo > gameState.maxCombo) {
                 gameState.maxCombo = gameState.combo;
@@ -1129,7 +1449,6 @@
             const comboMultiplier = 1 + (gameState.combo * 0.1);
             points = Math.floor(points * comboMultiplier);
 
-            // Double points powerup
             if (gameState.isDoublePoints) {
                 points *= 2;
                 gameState.isDoublePoints = false;
@@ -1142,13 +1461,9 @@
             gameState.correctAnswers++;
             gameState.dailyProgress += points;
 
-            // Add XP
             addXP(Math.floor(points / 5));
-
-            // Update display
             updateComboDisplay();
 
-            // Next question after delay
             setTimeout(() => {
                 generateQuestion();
             }, 500);
@@ -1165,11 +1480,8 @@
             gameState.currentScore = Math.max(0, gameState.currentScore - 5);
 
             updateComboDisplay();
-
-            // Show correct answer
             document.getElementById('answer-preview').textContent = gameState.currentNum1 * gameState.currentNum2;
 
-            // Check if game over (after 5 wrong answers or 20 total questions)
             const totalQuestions = gameState.correctAnswers + gameState.wrongAnswers;
             if (gameState.wrongAnswers >= 5 || totalQuestions >= 20) {
                 setTimeout(endGame, 1000);
@@ -1198,14 +1510,12 @@
             element.className = `floating-points ${type}`;
             element.textContent = (points >= 0 ? '+' : '') + points;
 
-            // Position near the answer input
             const input = document.getElementById('answer-input');
             const rect = input.getBoundingClientRect();
             element.style.left = rect.left + rect.width / 2 + 'px';
             element.style.top = rect.top + 'px';
 
             document.body.appendChild(element);
-
             setTimeout(() => element.remove(), 1000);
         }
 
@@ -1224,11 +1534,8 @@
 
         function levelUp() {
             gameState.level++;
-
-            // Show level up overlay
             document.getElementById('new-level').textContent = gameState.level;
 
-            // Level rewards
             let reward = '';
             if (gameState.level % 5 === 0) {
                 gameState.powerups.freeze++;
@@ -1302,7 +1609,6 @@
         function endGame() {
             clearInterval(gameState.timerInterval);
 
-            // Update streak
             const today = new Date().toDateString();
             if (gameState.lastPlayDate !== today) {
                 const lastDate = gameState.lastPlayDate ? new Date(gameState.lastPlayDate) : null;
@@ -1318,13 +1624,11 @@
                 gameState.lastPlayDate = today;
             }
 
-            // Update total score
             gameState.totalScore += gameState.currentScore;
 
-            // Check badges
             const newBadges = checkBadges();
 
-            // Save high score
+            // Save to high scores
             gameState.highScores.push({
                 name: gameState.playerName,
                 score: gameState.currentScore,
@@ -1333,10 +1637,31 @@
             gameState.highScores.sort((a, b) => b.score - a.score);
             gameState.highScores = gameState.highScores.slice(0, 10);
 
-            // Save game state
-            saveGameState();
+            // Save to game history
+            const gameRecord = {
+                id: Date.now(),
+                playerName: gameState.playerName,
+                date: new Date().toISOString(),
+                score: gameState.currentScore,
+                correctAnswers: gameState.correctAnswers,
+                wrongAnswers: gameState.wrongAnswers,
+                maxCombo: gameState.maxCombo,
+                difficulty: gameState.difficulty,
+                tables: [...gameState.selectedTables],
+                accuracy: gameState.correctAnswers + gameState.wrongAnswers > 0
+                    ? Math.round((gameState.correctAnswers / (gameState.correctAnswers + gameState.wrongAnswers)) * 100)
+                    : 0,
+                questions: gameState.questionsHistory,
+                duration: gameState.questionsHistory.reduce((acc, q) => acc + q.timeUsed, 0)
+            };
+            gameState.gameHistory.push(gameRecord);
 
-            // Show results
+            // Limit history to last 100 games
+            if (gameState.gameHistory.length > 100) {
+                gameState.gameHistory = gameState.gameHistory.slice(-100);
+            }
+
+            saveGameState();
             showResults(newBadges);
         }
 
@@ -1368,7 +1693,6 @@
             const xpEarned = Math.floor(gameState.currentScore / 5);
             document.getElementById('xp-earned').textContent = xpEarned;
 
-            // Show new badges
             const badgesContainer = document.getElementById('new-badges');
             badgesContainer.innerHTML = '';
 
@@ -1405,7 +1729,6 @@
                 grid.appendChild(badgeEl);
             });
 
-            // Show leaderboard
             const entries = document.getElementById('leaderboard-entries');
             entries.innerHTML = '';
 
@@ -1418,6 +1741,171 @@
                 `;
                 entries.appendChild(entryEl);
             });
+        }
+
+        // Show History Screen
+        function showHistory() {
+            showScreen('history-screen');
+            updateHistoryFilters();
+            renderHistory();
+        }
+
+        function updateHistoryFilters() {
+            const playerFilter = document.getElementById('history-filter-player');
+            const players = [...new Set(gameState.gameHistory.map(g => g.playerName))];
+
+            playerFilter.innerHTML = '<option value="">Tous les joueurs</option>';
+            players.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player;
+                option.textContent = player;
+                playerFilter.appendChild(option);
+            });
+        }
+
+        function renderHistory() {
+            const playerFilter = document.getElementById('history-filter-player').value;
+            const periodFilter = document.getElementById('history-filter-period').value;
+
+            let filteredHistory = [...gameState.gameHistory];
+
+            // Filter by player
+            if (playerFilter) {
+                filteredHistory = filteredHistory.filter(g => g.playerName === playerFilter);
+            }
+
+            // Filter by period
+            const now = new Date();
+            if (periodFilter === 'today') {
+                filteredHistory = filteredHistory.filter(g =>
+                    new Date(g.date).toDateString() === now.toDateString()
+                );
+            } else if (periodFilter === 'week') {
+                const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+                filteredHistory = filteredHistory.filter(g => new Date(g.date) >= weekAgo);
+            } else if (periodFilter === 'month') {
+                const monthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
+                filteredHistory = filteredHistory.filter(g => new Date(g.date) >= monthAgo);
+            }
+
+            // Update summary stats
+            const totalGames = filteredHistory.length;
+            const totalCorrect = filteredHistory.reduce((acc, g) => acc + g.correctAnswers, 0);
+            const avgScore = totalGames > 0 ? Math.round(filteredHistory.reduce((acc, g) => acc + g.score, 0) / totalGames) : 0;
+            const bestScore = totalGames > 0 ? Math.max(...filteredHistory.map(g => g.score)) : 0;
+
+            document.getElementById('total-games').textContent = totalGames;
+            document.getElementById('total-correct').textContent = totalCorrect;
+            document.getElementById('avg-score').textContent = avgScore;
+            document.getElementById('best-score').textContent = bestScore;
+
+            // Render history list
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+
+            const sortedHistory = filteredHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedHistory.slice(0, 50).forEach(game => {
+                const entry = document.createElement('div');
+                entry.className = 'history-entry';
+
+                const date = new Date(game.date);
+                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+                const timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+                const difficultyClass = `difficulty-${game.difficulty}`;
+                const difficultyLabel = { easy: 'Facile', medium: 'Normal', hard: 'Difficile', extreme: 'Extrême' }[game.difficulty];
+
+                entry.innerHTML = `
+                    <div class="history-entry-header">
+                        <span>${game.playerName} - ${dateStr} ${timeStr}</span>
+                        <span class="score">${game.score} pts</span>
+                    </div>
+                    <div class="history-entry-details">
+                        <span>Bonnes: ${game.correctAnswers}</span>
+                        <span>Erreurs: ${game.wrongAnswers}</span>
+                        <span>Combo max: ${game.maxCombo}</span>
+                        <span>Précision: ${game.accuracy}%</span>
+                        <span>Tables: ${game.tables.join(', ')}</span>
+                        <span><span class="difficulty-badge ${difficultyClass}">${difficultyLabel}</span></span>
+                    </div>
+                `;
+                historyList.appendChild(entry);
+            });
+
+            if (sortedHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #666;">Aucune partie enregistrée</p>';
+            }
+        }
+
+        // Add event listeners for filters
+        document.getElementById('history-filter-player').addEventListener('change', renderHistory);
+        document.getElementById('history-filter-period').addEventListener('change', renderHistory);
+
+        // Export functions
+        function exportCSV() {
+            if (gameState.gameHistory.length === 0) {
+                alert('Aucune donnée à exporter');
+                return;
+            }
+
+            const headers = ['Date', 'Joueur', 'Score', 'Bonnes réponses', 'Mauvaises réponses', 'Combo max', 'Précision', 'Difficulté', 'Tables'];
+            const rows = gameState.gameHistory.map(g => [
+                new Date(g.date).toLocaleString('fr-FR'),
+                g.playerName,
+                g.score,
+                g.correctAnswers,
+                g.wrongAnswers,
+                g.maxCombo,
+                g.accuracy + '%',
+                g.difficulty,
+                g.tables.join(' ')
+            ]);
+
+            const csv = [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+            downloadFile(csv, 'historique_tables_multiplication.csv', 'text/csv');
+        }
+
+        function exportJSON() {
+            if (gameState.gameHistory.length === 0) {
+                alert('Aucune donnée à exporter');
+                return;
+            }
+
+            const data = {
+                exportDate: new Date().toISOString(),
+                totalGames: gameState.gameHistory.length,
+                playerStats: calculatePlayerStats(),
+                games: gameState.gameHistory
+            };
+
+            const json = JSON.stringify(data, null, 2);
+            downloadFile(json, 'historique_tables_multiplication.json', 'application/json');
+        }
+
+        function calculatePlayerStats() {
+            const players = [...new Set(gameState.gameHistory.map(g => g.playerName))];
+            return players.map(player => {
+                const games = gameState.gameHistory.filter(g => g.playerName === player);
+                return {
+                    name: player,
+                    totalGames: games.length,
+                    totalScore: games.reduce((acc, g) => acc + g.score, 0),
+                    avgScore: Math.round(games.reduce((acc, g) => acc + g.score, 0) / games.length),
+                    bestScore: Math.max(...games.map(g => g.score)),
+                    totalCorrect: games.reduce((acc, g) => acc + g.correctAnswers, 0),
+                    avgAccuracy: Math.round(games.reduce((acc, g) => acc + g.accuracy, 0) / games.length)
+                };
+            });
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type + ';charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
         }
 
         // Screen Navigation
@@ -1449,7 +1937,6 @@
 
                     document.body.appendChild(confetti);
 
-                    // Animate falling
                     const animation = confetti.animate([
                         { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
                         { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
