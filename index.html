@@ -1604,17 +1604,65 @@
 
         // Messages d'encouragement par combo (paliers espacés)
         const encouragements = {
-            5: { emoji: '🔥', text: 'EN FEU !', subtext: '5 d\'affilée ! T\'es chaud !' },
-            10: { emoji: '🐯', text: 'T\'ES UN TIGRE !', subtext: '10 combo ! Inarrêtable !' },
-            15: { emoji: '👑', text: 'LÉGENDAIRE !', subtext: '15 ! T\'es un boss !' },
-            20: { emoji: '🚀', text: 'SURPUISSANT !', subtext: '20 combo ! T\'es un génie !' },
-            30: { emoji: '🌟', text: 'DIVIN !', subtext: '30 ! T\'es une légende !' }
+            5: {
+                emoji: '🔥',
+                text: 'EN FEU !',
+                subtext: '5 d\'affilée ! Continue !',
+                color: '#ff6b35',
+                reward: null
+            },
+            10: {
+                emoji: '🐵',
+                text: 'T\'ES UN SINGE !',
+                subtext: 'Malin et rapide ! +1 ❄️',
+                color: '#8b4513',
+                reward: { type: 'freeze', amount: 1 }
+            },
+            15: {
+                emoji: '🐆',
+                text: 'T\'ES UN GUÉPARD !',
+                subtext: 'Rapide comme l\'éclair ! +1 ⭐',
+                color: '#ffa500',
+                reward: { type: 'double', amount: 1 }
+            },
+            20: {
+                emoji: '🦁',
+                text: 'T\'ES UN LION !',
+                subtext: 'Le roi de la savane ! +1 ⏭️',
+                color: '#daa520',
+                reward: { type: 'skip', amount: 1 }
+            },
+            30: {
+                emoji: '✨',
+                text: 'DIVIN !',
+                subtext: 'Personne ne peut t\'arrêter ! +2 de chaque !',
+                color: '#9b59b6',
+                reward: { type: 'all', amount: 2 }
+            }
         };
 
         function checkEncouragement(combo) {
             if (encouragements[combo]) {
-                showEncouragement(encouragements[combo]);
+                const data = encouragements[combo];
+                showEncouragement(data);
+
+                // Donner la récompense
+                if (data.reward) {
+                    giveReward(data.reward);
+                }
             }
+        }
+
+        function giveReward(reward) {
+            if (reward.type === 'all') {
+                gameState.powerups.freeze += reward.amount;
+                gameState.powerups.double += reward.amount;
+                gameState.powerups.skip += reward.amount;
+            } else {
+                gameState.powerups[reward.type] += reward.amount;
+            }
+            updatePowerupDisplay();
+            saveGameState();
         }
 
         function showEncouragement(data) {
@@ -1626,6 +1674,8 @@
 
             emoji.textContent = data.emoji;
             text.textContent = data.text;
+            text.style.color = data.color || 'white';
+            text.style.textShadow = `4px 4px 8px rgba(0,0,0,0.8), 0 0 40px ${data.color || 'white'}, 0 0 80px ${data.color || 'white'}`;
             subtext.textContent = data.subtext;
 
             // Reset animation
