@@ -861,9 +861,90 @@
         .difficulty-medium { background: var(--secondary); color: white; }
         .difficulty-hard { background: var(--warning); color: var(--dark); }
         .difficulty-extreme { background: var(--danger); color: white; }
+
+        /* Encouragement Popup */
+        .encouragement-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .encouragement-overlay.active {
+            display: flex;
+        }
+
+        .encouragement-content {
+            text-align: center;
+            animation: encouragementPop 0.6s ease forwards;
+        }
+
+        .encouragement-emoji {
+            font-size: 5rem;
+            animation: bounceEmoji 0.6s ease;
+        }
+
+        .encouragement-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.5);
+            margin-top: 10px;
+            animation: slideUp 0.4s ease 0.2s both;
+        }
+
+        .encouragement-subtext {
+            font-size: 1.2rem;
+            color: var(--warning);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s ease 0.3s both;
+        }
+
+        @keyframes encouragementPop {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes bounceEmoji {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(0.9); }
+            75% { transform: scale(1.1); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
     </style>
 </head>
 <body>
+    <!-- Encouragement Overlay -->
+    <div class="encouragement-overlay" id="encouragement-overlay">
+        <div class="encouragement-content">
+            <div class="encouragement-emoji" id="encouragement-emoji">🔥</div>
+            <div class="encouragement-text" id="encouragement-text">WOW!</div>
+            <div class="encouragement-subtext" id="encouragement-subtext">5 d'affilée !</div>
+        </div>
+    </div>
+
     <!-- Install Banner -->
     <div class="install-banner" id="install-banner" onclick="installApp()">
         Installer l'application pour jouer hors-ligne !
@@ -1462,6 +1543,9 @@
                 gameState.maxCombo = gameState.combo;
             }
 
+            // Vérifier si on doit afficher un encouragement
+            checkEncouragement(gameState.combo);
+
             const comboMultiplier = 1 + (gameState.combo * 0.1);
             points = Math.floor(points * comboMultiplier);
 
@@ -1483,6 +1567,53 @@
             setTimeout(() => {
                 generateQuestion();
             }, 500);
+        }
+
+        // Messages d'encouragement par combo
+        const encouragements = {
+            3: { emoji: '👍', text: 'Bien joué !', subtext: '3 d\'affilée !' },
+            5: { emoji: '🔥', text: 'WOW !', subtext: 'T\'es chaud là !' },
+            7: { emoji: '💪', text: 'FORCE !', subtext: 'Continue comme ça !' },
+            10: { emoji: '🐯', text: 'T\'ES UN TIGRE !', subtext: '10 combo ! Inarrêtable !' },
+            12: { emoji: '🚀', text: 'DÉCOLLAGE !', subtext: 'Tu gères grave !' },
+            15: { emoji: '👑', text: 'LÉGENDAIRE !', subtext: '15 d\'affilée ! T\'es un boss !' },
+            18: { emoji: '🦁', text: 'KING !', subtext: 'Personne peut t\'arrêter !' },
+            20: { emoji: '⚡', text: 'SURPUISSANT !', subtext: '20 combo ! T\'es un génie !' },
+            25: { emoji: '🏆', text: 'CHAMPION !', subtext: 'C\'est du jamais vu !' },
+            30: { emoji: '🌟', text: 'DIVIN !', subtext: '30 ! T\'es une légende !' }
+        };
+
+        function checkEncouragement(combo) {
+            if (encouragements[combo]) {
+                showEncouragement(encouragements[combo]);
+            }
+        }
+
+        function showEncouragement(data) {
+            const overlay = document.getElementById('encouragement-overlay');
+            const emoji = document.getElementById('encouragement-emoji');
+            const text = document.getElementById('encouragement-text');
+            const subtext = document.getElementById('encouragement-subtext');
+
+            emoji.textContent = data.emoji;
+            text.textContent = data.text;
+            subtext.textContent = data.subtext;
+
+            // Reset animation
+            overlay.classList.remove('active');
+            void overlay.offsetWidth; // Force reflow
+            overlay.classList.add('active');
+
+            // Faire vibrer le container
+            document.querySelector('.container').classList.add('shake');
+            setTimeout(() => {
+                document.querySelector('.container').classList.remove('shake');
+            }, 500);
+
+            // Masquer après 1.5s
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 1500);
         }
 
         function wrongAnswer() {
