@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tables de Multiplication - Entraînement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00cec9;
+            --accent: #fd79a8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --dark: #2d3436;
+            --light: #dfe6e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .stat span {
+            font-weight: bold;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 30px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-screen h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .welcome-screen .emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #55efc4 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #81ecec 100%);
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Game Screen */
+        .game-screen {
+            text-align: center;
+        }
+
+        .timer-bar {
+            height: 8px;
+            background: var(--light);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--secondary));
+            transition: width 0.1s linear;
+            border-radius: 4px;
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, var(--warning), #e17055);
+        }
+
+        .timer-fill.danger {
+            background: linear-gradient(90deg, var(--danger), #e74c3c);
+        }
+
+        .combo-display {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 10px;
+            min-height: 30px;
+        }
+
+        .combo-display.active {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .question {
+            font-size: 3rem;
+            color: var(--dark);
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .question .operator {
+            color: var(--primary);
+        }
+
+        .answer-input {
+            width: 150px;
+            padding: 20px;
+            font-size: 2rem;
+            text-align: center;
+            border: 3px solid var(--light);
+            border-radius: 15px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .answer-input.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.1);
+            animation: correctAnswer 0.5s ease;
+        }
+
+        .answer-input.wrong {
+            border-color: var(--danger);
+            background: rgba(214, 48, 49, 0.1);
+            animation: wrongAnswer 0.5s ease;
+        }
+
+        @keyframes correctAnswer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes wrongAnswer {
+            0%, 25%, 50%, 75%, 100% { transform: translateX(0); }
+            12.5%, 62.5% { transform: translateX(-10px); }
+            37.5%, 87.5% { transform: translateX(10px); }
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .numpad-btn {
+            padding: 20px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .numpad-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .numpad-btn:active {
+            transform: scale(0.95);
+        }
+
+        .numpad-btn.clear {
+            background: var(--warning);
+            color: white;
+        }
+
+        .numpad-btn.submit {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Power-ups */
+        .powerups {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .powerup {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .powerup:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+
+        .powerup:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .powerup-freeze {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+
+        .powerup-double {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        }
+
+        .powerup-skip {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        .powerup-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            text-align: center;
+        }
+
+        .results-screen h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            color: var(--success);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .results-stats {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .results-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .results-stat:last-child {
+            border-bottom: none;
+        }
+
+        .new-badge {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            animation: badgePopup 0.5s ease;
+        }
+
+        @keyframes badgePopup {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Badges Screen */
+        .badges-screen {
+            text-align: center;
+        }
+
+        .badges-screen h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .badge {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        }
+
+        .badge.locked {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            margin-top: 20px;
+        }
+
+        .leaderboard h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .leaderboard-entry.highlight {
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            color: white;
+        }
+
+        /* Floating Points */
+        .floating-points {
+            position: fixed;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 1.5rem;
+            animation: floatUp 1s ease forwards;
+            z-index: 1000;
+        }
+
+        .floating-points.positive {
+            color: var(--success);
+        }
+
+        .floating-points.negative {
+            color: var(--danger);
+        }
+
+        .floating-points.bonus {
+            color: var(--warning);
+            font-size: 2rem;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        /* Level Up Animation */
+        .level-up-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .level-up-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .level-up-content {
+            text-align: center;
+            color: white;
+            animation: levelUpPop 0.5s ease;
+        }
+
+        .level-up-content h2 {
+            font-size: 3rem;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .level-up-content p {
+            font-size: 1.5rem;
+        }
+
+        @keyframes levelUpPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .stat {
+                padding: 5px 10px;
+                font-size: 0.8rem;
+            }
+
+            .question {
+                font-size: 2.5rem;
+            }
+
+            .answer-input {
+                width: 120px;
+                padding: 15px;
+                font-size: 1.5rem;
+            }
+
+            .numpad-btn {
+                padding: 15px;
+                font-size: 1.2rem;
+            }
+
+            .badges-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .badge {
+                padding: 10px;
+            }
+
+            .badge-icon {
+                font-size: 1.5rem;
+            }
+
+            .badge-name {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Tables selection */
+        .tables-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .table-checkbox {
+            display: none;
+        }
+
+        .table-label {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .table-checkbox:checked + .table-label {
+            background: var(--primary);
+            color: white;
+        }
+
+        .table-label:hover {
+            transform: scale(1.1);
+        }
+
+        /* Daily Challenge */
+        .daily-challenge {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .daily-challenge h3 {
+            margin-bottom: 10px;
+        }
+
+        .streak-display {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .streak-fire {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tables de Multiplication</h1>
+            <div class="stats-bar">
+                <div class="stat">Niveau: <span id="level">1</span></div>
+                <div class="stat">XP: <span id="xp">0</span>/<span id="xp-max">100</span></div>
+                <div class="stat">Score: <span id="total-score">0</span></div>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="screen welcome-screen active" id="welcome-screen">
+            <div class="emoji">🎮</div>
+            <h2>Prêt à jouer ?</h2>
+
+            <div class="input-group">
+                <label for="player-name">Ton prénom</label>
+                <input type="text" id="player-name" placeholder="Entre ton prénom..." maxlength="20">
+            </div>
+
+            <div class="input-group">
+                <label>Choisis tes tables (clique pour sélectionner)</label>
+                <div class="tables-selection">
+                    <input type="checkbox" class="table-checkbox" id="table-2" value="2" checked>
+                    <label class="table-label" for="table-2">2</label>
+                    <input type="checkbox" class="table-checkbox" id="table-3" value="3" checked>
+                    <label class="table-label" for="table-3">3</label>
+                    <input type="checkbox" class="table-checkbox" id="table-4" value="4" checked>
+                    <label class="table-label" for="table-4">4</label>
+                    <input type="checkbox" class="table-checkbox" id="table-5" value="5" checked>
+                    <label class="table-label" for="table-5">5</label>
+                    <input type="checkbox" class="table-checkbox" id="table-6" value="6">
+                    <label class="table-label" for="table-6">6</label>
+                    <input type="checkbox" class="table-checkbox" id="table-7" value="7">
+                    <label class="table-label" for="table-7">7</label>
+                    <input type="checkbox" class="table-checkbox" id="table-8" value="8">
+                    <label class="table-label" for="table-8">8</label>
+                    <input type="checkbox" class="table-checkbox" id="table-9" value="9">
+                    <label class="table-label" for="table-9">9</label>
+                    <input type="checkbox" class="table-checkbox" id="table-10" value="10">
+                    <label class="table-label" for="table-10">10</label>
+                    <input type="checkbox" class="table-checkbox" id="table-11" value="11">
+                    <label class="table-label" for="table-11">11</label>
+                    <input type="checkbox" class="table-checkbox" id="table-12" value="12">
+                    <label class="table-label" for="table-12">12</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="difficulty">Difficulté</label>
+                <select id="difficulty">
+                    <option value="easy">Facile (20 secondes)</option>
+                    <option value="medium" selected>Normal (15 secondes)</option>
+                    <option value="hard">Difficile (10 secondes)</option>
+                    <option value="extreme">Extrême (7 secondes)</option>
+                </select>
+            </div>
+
+            <div class="daily-challenge" id="daily-challenge">
+                <h3>Défi du jour</h3>
+                <p id="daily-goal">Atteins 500 points !</p>
+                <div class="streak-display">
+                    <span class="streak-fire">🔥</span> Série : <span id="streak">0</span> jours
+                </div>
+            </div>
+
+            <button class="btn" onclick="startGame()">Commencer !</button>
+            <button class="btn btn-secondary" onclick="showBadges()">Mes Badges</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen game-screen" id="game-screen">
+            <div class="timer-bar">
+                <div class="timer-fill" id="timer-fill"></div>
+            </div>
+
+            <div class="combo-display" id="combo-display"></div>
+
+            <div class="question" id="question">
+                <span id="num1">?</span> <span class="operator">×</span> <span id="num2">?</span> = <span id="answer-preview">?</span>
+            </div>
+
+            <input type="number" class="answer-input" id="answer-input" inputmode="numeric" pattern="[0-9]*" autofocus>
+
+            <div class="powerups">
+                <button class="powerup powerup-freeze" id="powerup-freeze" onclick="usePowerup('freeze')" title="Geler le temps (5s)">
+                    ❄️
+                    <span class="powerup-count" id="freeze-count">3</span>
+                </button>
+                <button class="powerup powerup-double" id="powerup-double" onclick="usePowerup('double')" title="Double points (prochain)">
+                    ⭐
+                    <span class="powerup-count" id="double-count">2</span>
+                </button>
+                <button class="powerup powerup-skip" id="powerup-skip" onclick="usePowerup('skip')" title="Passer la question">
+                    ⏭️
+                    <span class="powerup-count" id="skip-count">1</span>
+                </button>
+            </div>
+
+            <div class="numpad">
+                <button class="numpad-btn" onclick="addDigit(7)">7</button>
+                <button class="numpad-btn" onclick="addDigit(8)">8</button>
+                <button class="numpad-btn" onclick="addDigit(9)">9</button>
+                <button class="numpad-btn" onclick="addDigit(4)">4</button>
+                <button class="numpad-btn" onclick="addDigit(5)">5</button>
+                <button class="numpad-btn" onclick="addDigit(6)">6</button>
+                <button class="numpad-btn" onclick="addDigit(1)">1</button>
+                <button class="numpad-btn" onclick="addDigit(2)">2</button>
+                <button class="numpad-btn" onclick="addDigit(3)">3</button>
+                <button class="numpad-btn clear" onclick="clearAnswer()">C</button>
+                <button class="numpad-btn" onclick="addDigit(0)">0</button>
+                <button class="numpad-btn submit" onclick="submitAnswer()">✓</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen results-screen" id="results-screen">
+            <h2>🎉 Partie terminée !</h2>
+
+            <div class="score-display" id="final-score">0</div>
+            <p>points</p>
+
+            <div id="new-badges"></div>
+
+            <div class="results-stats">
+                <div class="results-stat">
+                    <span>Bonnes réponses</span>
+                    <span id="correct-answers">0</span>
+                </div>
+                <div class="results-stat">
+                    <span>Mauvaises réponses</span>
+                    <span id="wrong-answers">0</span>
+                </div>
+                <div class="results-stat">
+                    <span>Meilleur combo</span>
+                    <span id="best-combo">0</span>
+                </div>
+                <div class="results-stat">
+                    <span>Précision</span>
+                    <span id="accuracy">0%</span>
+                </div>
+                <div class="results-stat">
+                    <span>XP gagnés</span>
+                    <span id="xp-earned">0</span>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startGame()">Rejouer</button>
+            <button class="btn btn-secondary" onclick="showWelcome()">Menu</button>
+        </div>
+
+        <!-- Badges Screen -->
+        <div class="screen badges-screen" id="badges-screen">
+            <h2>🏆 Mes Badges</h2>
+
+            <div class="badges-grid" id="badges-grid"></div>
+
+            <div class="leaderboard" id="leaderboard">
+                <h3>🏅 Meilleurs scores</h3>
+                <div id="leaderboard-entries"></div>
+            </div>
+
+            <button class="btn" onclick="showWelcome()">Retour</button>
+        </div>
+    </div>
+
+    <!-- Level Up Overlay -->
+    <div class="level-up-overlay" id="level-up-overlay">
+        <div class="level-up-content">
+            <h2>🎊 NIVEAU SUPÉRIEUR !</h2>
+            <p>Tu es maintenant niveau <span id="new-level">2</span></p>
+            <p id="level-reward"></p>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            playerName: '',
+            level: 1,
+            xp: 0,
+            totalScore: 0,
+            currentScore: 0,
+            combo: 0,
+            maxCombo: 0,
+            correctAnswers: 0,
+            wrongAnswers: 0,
+            selectedTables: [2, 3, 4, 5],
+            difficulty: 'medium',
+            timePerQuestion: 15,
+            currentNum1: 0,
+            currentNum2: 0,
+            currentAnswer: '',
+            timerInterval: null,
+            timeRemaining: 15,
+            isFrozen: false,
+            isDoublePoints: false,
+            powerups: {
+                freeze: 3,
+                double: 2,
+                skip: 1
+            },
+            badges: [],
+            highScores: [],
+            streak: 0,
+            lastPlayDate: null,
+            dailyGoal: 500,
+            dailyProgress: 0
+        };
+
+        // Badge Definitions
+        const badgeDefinitions = [
+            { id: 'first_game', name: 'Premier pas', icon: '🎮', condition: () => true, description: 'Joue ta première partie' },
+            { id: 'combo_5', name: 'Combo x5', icon: '🔥', condition: (s) => s.maxCombo >= 5, description: '5 bonnes réponses de suite' },
+            { id: 'combo_10', name: 'Combo x10', icon: '💥', condition: (s) => s.maxCombo >= 10, description: '10 bonnes réponses de suite' },
+            { id: 'combo_20', name: 'Inarrêtable', icon: '⚡', condition: (s) => s.maxCombo >= 20, description: '20 bonnes réponses de suite' },
+            { id: 'score_500', name: '500 points', icon: '⭐', condition: (s) => s.currentScore >= 500, description: 'Atteins 500 points' },
+            { id: 'score_1000', name: '1000 points', icon: '🌟', condition: (s) => s.currentScore >= 1000, description: 'Atteins 1000 points' },
+            { id: 'score_2000', name: 'Maître', icon: '👑', condition: (s) => s.currentScore >= 2000, description: 'Atteins 2000 points' },
+            { id: 'perfect_10', name: 'Parfait !', icon: '💯', condition: (s) => s.correctAnswers >= 10 && s.wrongAnswers === 0, description: '10 réponses sans erreur' },
+            { id: 'speed_demon', name: 'Éclair', icon: '⚡', condition: (s) => s.difficulty === 'extreme' && s.correctAnswers >= 5, description: '5 bonnes réponses en mode Extrême' },
+            { id: 'all_tables', name: 'Complet', icon: '📚', condition: (s) => s.selectedTables.length >= 10, description: 'Joue avec 10 tables ou plus' },
+            { id: 'level_5', name: 'Niveau 5', icon: '🎯', condition: (s) => s.level >= 5, description: 'Atteins le niveau 5' },
+            { id: 'level_10', name: 'Expert', icon: '🏆', condition: (s) => s.level >= 10, description: 'Atteins le niveau 10' },
+            { id: 'streak_3', name: 'Assidu', icon: '📅', condition: (s) => s.streak >= 3, description: '3 jours de suite' },
+            { id: 'streak_7', name: 'Régulier', icon: '🗓️', condition: (s) => s.streak >= 7, description: '7 jours de suite' },
+            { id: 'daily_hero', name: 'Héros du jour', icon: '🦸', condition: (s) => s.dailyProgress >= s.dailyGoal, description: 'Complète le défi du jour' }
+        ];
+
+        // XP required per level
+        const xpPerLevel = (level) => Math.floor(100 * Math.pow(1.5, level - 1));
+
+        // Initialize
+        function init() {
+            loadGameState();
+            updateHeader();
+            updateStreak();
+            updatePowerupDisplay();
+        }
+
+        // Load/Save Game State
+        function loadGameState() {
+            const saved = localStorage.getItem('multiplicationGame');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState.playerName = data.playerName || '';
+                gameState.level = data.level || 1;
+                gameState.xp = data.xp || 0;
+                gameState.totalScore = data.totalScore || 0;
+                gameState.badges = data.badges || [];
+                gameState.highScores = data.highScores || [];
+                gameState.streak = data.streak || 0;
+                gameState.lastPlayDate = data.lastPlayDate;
+                gameState.powerups = data.powerups || { freeze: 3, double: 2, skip: 1 };
+
+                document.getElementById('player-name').value = gameState.playerName;
+            }
+        }
+
+        function saveGameState() {
+            const data = {
+                playerName: gameState.playerName,
+                level: gameState.level,
+                xp: gameState.xp,
+                totalScore: gameState.totalScore,
+                badges: gameState.badges,
+                highScores: gameState.highScores,
+                streak: gameState.streak,
+                lastPlayDate: gameState.lastPlayDate,
+                powerups: gameState.powerups
+            };
+            localStorage.setItem('multiplicationGame', JSON.stringify(data));
+        }
+
+        // Update Header
+        function updateHeader() {
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('xp').textContent = gameState.xp;
+            document.getElementById('xp-max').textContent = xpPerLevel(gameState.level);
+            document.getElementById('total-score').textContent = gameState.totalScore;
+        }
+
+        // Update Streak
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastPlay = gameState.lastPlayDate;
+
+            if (lastPlay) {
+                const lastDate = new Date(lastPlay);
+                const dayDiff = Math.floor((new Date(today) - lastDate) / (1000 * 60 * 60 * 24));
+
+                if (dayDiff > 1) {
+                    gameState.streak = 0;
+                }
+            }
+
+            document.getElementById('streak').textContent = gameState.streak;
+        }
+
+        // Start Game
+        function startGame() {
+            // Get player name
+            gameState.playerName = document.getElementById('player-name').value.trim() || 'Joueur';
+
+            // Get selected tables
+            gameState.selectedTables = [];
+            document.querySelectorAll('.table-checkbox:checked').forEach(cb => {
+                gameState.selectedTables.push(parseInt(cb.value));
+            });
+
+            if (gameState.selectedTables.length === 0) {
+                alert('Sélectionne au moins une table !');
+                return;
+            }
+
+            // Get difficulty
+            gameState.difficulty = document.getElementById('difficulty').value;
+            switch(gameState.difficulty) {
+                case 'easy': gameState.timePerQuestion = 20; break;
+                case 'medium': gameState.timePerQuestion = 15; break;
+                case 'hard': gameState.timePerQuestion = 10; break;
+                case 'extreme': gameState.timePerQuestion = 7; break;
+            }
+
+            // Reset game state
+            gameState.currentScore = 0;
+            gameState.combo = 0;
+            gameState.maxCombo = 0;
+            gameState.correctAnswers = 0;
+            gameState.wrongAnswers = 0;
+            gameState.dailyProgress = 0;
+
+            // Show game screen
+            showScreen('game-screen');
+
+            // Generate first question
+            generateQuestion();
+
+            // Focus input
+            document.getElementById('answer-input').focus();
+        }
+
+        // Generate Question
+        function generateQuestion() {
+            const table = gameState.selectedTables[Math.floor(Math.random() * gameState.selectedTables.length)];
+            const multiplier = Math.floor(Math.random() * 10) + 1;
+
+            gameState.currentNum1 = table;
+            gameState.currentNum2 = multiplier;
+            gameState.currentAnswer = '';
+
+            document.getElementById('num1').textContent = table;
+            document.getElementById('num2').textContent = multiplier;
+            document.getElementById('answer-preview').textContent = '?';
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').className = 'answer-input';
+
+            // Reset and start timer
+            startTimer();
+
+            // Update combo display
+            updateComboDisplay();
+        }
+
+        // Timer
+        function startTimer() {
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+            }
+
+            gameState.timeRemaining = gameState.timePerQuestion;
+            updateTimerBar();
+
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.isFrozen) {
+                    gameState.timeRemaining -= 0.1;
+                    updateTimerBar();
+
+                    if (gameState.timeRemaining <= 0) {
+                        timeUp();
+                    }
+                }
+            }, 100);
+        }
+
+        function updateTimerBar() {
+            const fill = document.getElementById('timer-fill');
+            const percentage = (gameState.timeRemaining / gameState.timePerQuestion) * 100;
+            fill.style.width = percentage + '%';
+
+            fill.className = 'timer-fill';
+            if (percentage < 30) {
+                fill.classList.add('danger');
+            } else if (percentage < 50) {
+                fill.classList.add('warning');
+            }
+        }
+
+        function timeUp() {
+            clearInterval(gameState.timerInterval);
+            wrongAnswer();
+        }
+
+        // Input handling
+        function addDigit(digit) {
+            if (gameState.currentAnswer.length < 3) {
+                gameState.currentAnswer += digit;
+                document.getElementById('answer-input').value = gameState.currentAnswer;
+                document.getElementById('answer-preview').textContent = gameState.currentAnswer || '?';
+            }
+        }
+
+        function clearAnswer() {
+            gameState.currentAnswer = '';
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-preview').textContent = '?';
+        }
+
+        // Handle keyboard input
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('game-screen').classList.contains('active')) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                addDigit(parseInt(e.key));
+            } else if (e.key === 'Backspace') {
+                gameState.currentAnswer = gameState.currentAnswer.slice(0, -1);
+                document.getElementById('answer-input').value = gameState.currentAnswer;
+                document.getElementById('answer-preview').textContent = gameState.currentAnswer || '?';
+            } else if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+
+        // Answer input direct handling
+        document.getElementById('answer-input').addEventListener('input', (e) => {
+            gameState.currentAnswer = e.target.value;
+            document.getElementById('answer-preview').textContent = gameState.currentAnswer || '?';
+        });
+
+        // Submit Answer
+        function submitAnswer() {
+            const correctAnswer = gameState.currentNum1 * gameState.currentNum2;
+            const userAnswer = parseInt(gameState.currentAnswer);
+
+            if (isNaN(userAnswer)) return;
+
+            clearInterval(gameState.timerInterval);
+
+            if (userAnswer === correctAnswer) {
+                correctAnswerHandler();
+            } else {
+                wrongAnswer();
+            }
+        }
+
+        function correctAnswerHandler() {
+            const input = document.getElementById('answer-input');
+            input.classList.add('correct');
+
+            // Calculate points
+            let points = 10;
+
+            // Time bonus
+            const timeBonus = Math.floor(gameState.timeRemaining * 2);
+            points += timeBonus;
+
+            // Combo bonus
+            gameState.combo++;
+            if (gameState.combo > gameState.maxCombo) {
+                gameState.maxCombo = gameState.combo;
+            }
+
+            const comboMultiplier = 1 + (gameState.combo * 0.1);
+            points = Math.floor(points * comboMultiplier);
+
+            // Double points powerup
+            if (gameState.isDoublePoints) {
+                points *= 2;
+                gameState.isDoublePoints = false;
+                showFloatingPoints(points, 'bonus');
+            } else {
+                showFloatingPoints(points, 'positive');
+            }
+
+            gameState.currentScore += points;
+            gameState.correctAnswers++;
+            gameState.dailyProgress += points;
+
+            // Add XP
+            addXP(Math.floor(points / 5));
+
+            // Update display
+            updateComboDisplay();
+
+            // Next question after delay
+            setTimeout(() => {
+                generateQuestion();
+            }, 500);
+        }
+
+        function wrongAnswer() {
+            const input = document.getElementById('answer-input');
+            input.classList.add('wrong');
+
+            gameState.combo = 0;
+            gameState.wrongAnswers++;
+
+            showFloatingPoints(-5, 'negative');
+            gameState.currentScore = Math.max(0, gameState.currentScore - 5);
+
+            updateComboDisplay();
+
+            // Show correct answer
+            document.getElementById('answer-preview').textContent = gameState.currentNum1 * gameState.currentNum2;
+
+            // Check if game over (after 5 wrong answers or 20 total questions)
+            const totalQuestions = gameState.correctAnswers + gameState.wrongAnswers;
+            if (gameState.wrongAnswers >= 5 || totalQuestions >= 20) {
+                setTimeout(endGame, 1000);
+            } else {
+                setTimeout(() => {
+                    generateQuestion();
+                }, 1500);
+            }
+        }
+
+        // Combo Display
+        function updateComboDisplay() {
+            const display = document.getElementById('combo-display');
+            if (gameState.combo >= 2) {
+                display.textContent = `🔥 COMBO x${gameState.combo} !`;
+                display.classList.add('active');
+                setTimeout(() => display.classList.remove('active'), 500);
+            } else {
+                display.textContent = '';
+            }
+        }
+
+        // Floating Points Animation
+        function showFloatingPoints(points, type) {
+            const element = document.createElement('div');
+            element.className = `floating-points ${type}`;
+            element.textContent = (points >= 0 ? '+' : '') + points;
+
+            // Position near the answer input
+            const input = document.getElementById('answer-input');
+            const rect = input.getBoundingClientRect();
+            element.style.left = rect.left + rect.width / 2 + 'px';
+            element.style.top = rect.top + 'px';
+
+            document.body.appendChild(element);
+
+            setTimeout(() => element.remove(), 1000);
+        }
+
+        // XP System
+        function addXP(amount) {
+            gameState.xp += amount;
+
+            const requiredXP = xpPerLevel(gameState.level);
+            while (gameState.xp >= requiredXP) {
+                gameState.xp -= requiredXP;
+                levelUp();
+            }
+
+            updateHeader();
+        }
+
+        function levelUp() {
+            gameState.level++;
+
+            // Show level up overlay
+            document.getElementById('new-level').textContent = gameState.level;
+
+            // Level rewards
+            let reward = '';
+            if (gameState.level % 5 === 0) {
+                gameState.powerups.freeze++;
+                gameState.powerups.double++;
+                gameState.powerups.skip++;
+                reward = '+1 de chaque power-up !';
+            } else if (gameState.level % 3 === 0) {
+                gameState.powerups.freeze++;
+                reward = '+1 Gel du temps !';
+            } else if (gameState.level % 2 === 0) {
+                gameState.powerups.double++;
+                reward = '+1 Double points !';
+            }
+
+            document.getElementById('level-reward').textContent = reward;
+
+            const overlay = document.getElementById('level-up-overlay');
+            overlay.classList.add('active');
+
+            createConfetti();
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 2000);
+
+            updatePowerupDisplay();
+            saveGameState();
+        }
+
+        // Powerups
+        function usePowerup(type) {
+            if (gameState.powerups[type] <= 0) return;
+
+            gameState.powerups[type]--;
+            updatePowerupDisplay();
+
+            switch(type) {
+                case 'freeze':
+                    gameState.isFrozen = true;
+                    document.getElementById('timer-fill').style.background = 'linear-gradient(90deg, #74b9ff, #0984e3)';
+                    setTimeout(() => {
+                        gameState.isFrozen = false;
+                    }, 5000);
+                    break;
+
+                case 'double':
+                    gameState.isDoublePoints = true;
+                    showFloatingPoints('x2', 'bonus');
+                    break;
+
+                case 'skip':
+                    clearInterval(gameState.timerInterval);
+                    generateQuestion();
+                    break;
+            }
+
+            saveGameState();
+        }
+
+        function updatePowerupDisplay() {
+            document.getElementById('freeze-count').textContent = gameState.powerups.freeze;
+            document.getElementById('double-count').textContent = gameState.powerups.double;
+            document.getElementById('skip-count').textContent = gameState.powerups.skip;
+
+            document.getElementById('powerup-freeze').disabled = gameState.powerups.freeze <= 0;
+            document.getElementById('powerup-double').disabled = gameState.powerups.double <= 0;
+            document.getElementById('powerup-skip').disabled = gameState.powerups.skip <= 0;
+        }
+
+        // End Game
+        function endGame() {
+            clearInterval(gameState.timerInterval);
+
+            // Update streak
+            const today = new Date().toDateString();
+            if (gameState.lastPlayDate !== today) {
+                const lastDate = gameState.lastPlayDate ? new Date(gameState.lastPlayDate) : null;
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                if (lastDate && lastDate.toDateString() === yesterday.toDateString()) {
+                    gameState.streak++;
+                } else if (!lastDate || lastDate.toDateString() !== today) {
+                    gameState.streak = 1;
+                }
+
+                gameState.lastPlayDate = today;
+            }
+
+            // Update total score
+            gameState.totalScore += gameState.currentScore;
+
+            // Check badges
+            const newBadges = checkBadges();
+
+            // Save high score
+            gameState.highScores.push({
+                name: gameState.playerName,
+                score: gameState.currentScore,
+                date: new Date().toISOString()
+            });
+            gameState.highScores.sort((a, b) => b.score - a.score);
+            gameState.highScores = gameState.highScores.slice(0, 10);
+
+            // Save game state
+            saveGameState();
+
+            // Show results
+            showResults(newBadges);
+        }
+
+        function checkBadges() {
+            const newBadges = [];
+
+            badgeDefinitions.forEach(badge => {
+                if (!gameState.badges.includes(badge.id) && badge.condition(gameState)) {
+                    gameState.badges.push(badge.id);
+                    newBadges.push(badge);
+                }
+            });
+
+            return newBadges;
+        }
+
+        function showResults(newBadges) {
+            showScreen('results-screen');
+
+            document.getElementById('final-score').textContent = gameState.currentScore;
+            document.getElementById('correct-answers').textContent = gameState.correctAnswers;
+            document.getElementById('wrong-answers').textContent = gameState.wrongAnswers;
+            document.getElementById('best-combo').textContent = gameState.maxCombo;
+
+            const total = gameState.correctAnswers + gameState.wrongAnswers;
+            const accuracy = total > 0 ? Math.round((gameState.correctAnswers / total) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+
+            const xpEarned = Math.floor(gameState.currentScore / 5);
+            document.getElementById('xp-earned').textContent = xpEarned;
+
+            // Show new badges
+            const badgesContainer = document.getElementById('new-badges');
+            badgesContainer.innerHTML = '';
+
+            newBadges.forEach(badge => {
+                const badgeEl = document.createElement('div');
+                badgeEl.className = 'new-badge';
+                badgeEl.innerHTML = `<span style="font-size: 2rem">${badge.icon}</span><br><strong>${badge.name}</strong><br><small>${badge.description}</small>`;
+                badgesContainer.appendChild(badgeEl);
+            });
+
+            if (newBadges.length > 0) {
+                createConfetti();
+            }
+
+            updateHeader();
+        }
+
+        // Show Badges Screen
+        function showBadges() {
+            showScreen('badges-screen');
+
+            const grid = document.getElementById('badges-grid');
+            grid.innerHTML = '';
+
+            badgeDefinitions.forEach(badge => {
+                const unlocked = gameState.badges.includes(badge.id);
+                const badgeEl = document.createElement('div');
+                badgeEl.className = `badge ${unlocked ? 'unlocked' : 'locked'}`;
+                badgeEl.innerHTML = `
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                `;
+                badgeEl.title = badge.description;
+                grid.appendChild(badgeEl);
+            });
+
+            // Show leaderboard
+            const entries = document.getElementById('leaderboard-entries');
+            entries.innerHTML = '';
+
+            gameState.highScores.forEach((entry, index) => {
+                const entryEl = document.createElement('div');
+                entryEl.className = 'leaderboard-entry';
+                entryEl.innerHTML = `
+                    <span>${index + 1}. ${entry.name}</span>
+                    <span>${entry.score} pts</span>
+                `;
+                entries.appendChild(entryEl);
+            });
+        }
+
+        // Screen Navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showWelcome() {
+            showScreen('welcome-screen');
+            updateStreak();
+        }
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#6c5ce7', '#00cec9', '#fd79a8', '#fdcb6e', '#00b894'];
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+                    document.body.appendChild(confetti);
+
+                    // Animate falling
+                    const animation = confetti.animate([
+                        { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                        { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                    ], {
+                        duration: 2000 + Math.random() * 1000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    });
+
+                    animation.onfinish = () => confetti.remove();
+                }, Math.random() * 500);
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
