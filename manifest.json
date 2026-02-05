@@ -2,7 +2,7 @@
   "name": "Tables de Multiplication - Entraînement",
   "short_name": "Tables Multi",
   "description": "Application d'entraînement aux tables de multiplication avec gamification",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#6c5ce7",

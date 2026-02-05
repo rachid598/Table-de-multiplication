@@ -1,16 +1,16 @@
-const CACHE_NAME = 'tables-multiplication-v1';
+const CACHE_NAME = 'tables-multiplication-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-72.png',
-  '/icons/icon-96.png',
-  '/icons/icon-128.png',
-  '/icons/icon-144.png',
-  '/icons/icon-152.png',
-  '/icons/icon-192.png',
-  '/icons/icon-384.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-72.png',
+  './icons/icon-96.png',
+  './icons/icon-128.png',
+  './icons/icon-144.png',
+  './icons/icon-152.png',
+  './icons/icon-192.png',
+  './icons/icon-384.png',
+  './icons/icon-512.png'
 ];
 
 // Installation du Service Worker
@@ -45,26 +45,41 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Stratégie de cache: Cache First, puis Network
+// Stratégie: Network First pour HTML, Cache First pour les assets
 self.addEventListener('fetch', (event) => {
+  // Pour les navigations (pages HTML), essayer le réseau d'abord
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request)
+            .then((response) => response || caches.match('./index.html'));
+        })
+    );
+    return;
+  }
+
+  // Pour les autres ressources (icons, manifest), Cache First
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Retourne la réponse du cache si elle existe
         if (response) {
           return response;
         }
 
-        // Sinon, fait la requête réseau
         return fetch(event.request).then((response) => {
-          // Ne met en cache que les requêtes réussies
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
 
-          // Clone la réponse pour la mettre en cache
           const responseToCache = response.clone();
-
           caches.open(CACHE_NAME)
             .then((cache) => {
               cache.put(event.request, responseToCache);
@@ -74,10 +89,7 @@ self.addEventListener('fetch', (event) => {
         });
       })
       .catch(() => {
-        // Fallback pour les pages HTML
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
+        // Fallback silencieux
       })
   );
 });
