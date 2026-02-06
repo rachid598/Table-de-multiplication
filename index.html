@@ -966,6 +966,422 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* ========== AVATAR SYSTEM ========== */
+        .avatar-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar-emoji {
+            font-size: 4rem;
+            animation: avatarFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .avatar-title {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .avatar-mini {
+            font-size: 2rem;
+            margin-right: 8px;
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-with-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* ========== BOSS QUESTION ========== */
+        .question.boss-mode {
+            animation: bossGlow 1s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        .question.boss-mode::before {
+            content: '👹 BOSS';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #d63031, #e17055);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: bossPulse 0.5s ease infinite alternate;
+        }
+
+        @keyframes bossGlow {
+            from { box-shadow: 0 0 20px rgba(214, 48, 49, 0.5), 0 0 40px rgba(214, 48, 49, 0.3); }
+            to { box-shadow: 0 0 30px rgba(214, 48, 49, 0.8), 0 0 60px rgba(214, 48, 49, 0.5); }
+        }
+
+        @keyframes bossPulse {
+            from { transform: translateX(-50%) scale(1); }
+            to { transform: translateX(-50%) scale(1.1); }
+        }
+
+        .boss-multiplier {
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* ========== DUEL MODE ========== */
+        .duel-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .duel-container {
+                flex-direction: row;
+            }
+        }
+
+        .duel-player {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .duel-player.player1 {
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(162, 155, 254, 0.1));
+            border: 3px solid var(--primary);
+        }
+
+        .duel-player.player2 {
+            background: linear-gradient(135deg, rgba(0, 206, 201, 0.1), rgba(129, 236, 236, 0.1));
+            border: 3px solid var(--secondary);
+        }
+
+        .duel-player.winner {
+            animation: winnerGlow 0.5s ease infinite alternate;
+        }
+
+        @keyframes winnerGlow {
+            from { box-shadow: 0 0 20px rgba(0, 184, 148, 0.5); }
+            to { box-shadow: 0 0 40px rgba(0, 184, 148, 0.8); }
+        }
+
+        .duel-player-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .duel-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .duel-question {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .duel-numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .duel-numpad .numpad-btn {
+            padding: 12px;
+            font-size: 1.2rem;
+        }
+
+        .duel-vs {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--warning);
+            color: var(--dark);
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .duel-result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+        }
+
+        .duel-result-overlay.active {
+            display: flex;
+        }
+
+        .duel-result-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        /* ========== SPACE THEME ========== */
+        body.space-theme {
+            background: linear-gradient(135deg, #0c0c1e 0%, #1a1a3e 50%, #2d1b4e 100%);
+        }
+
+        body.space-theme .container {
+            background: rgba(20, 20, 40, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.space-theme .header {
+            background: linear-gradient(135deg, #1a1a3e 0%, #2d1b4e 100%);
+        }
+
+        body.space-theme .question {
+            background: linear-gradient(135deg, #1a1a3e, #2d1b4e);
+            color: #fff;
+            border: 2px solid rgba(155, 89, 182, 0.5);
+        }
+
+        body.space-theme .numpad-btn {
+            background: linear-gradient(135deg, #2d1b4e, #1a1a3e);
+            color: #fff;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        body.space-theme .numpad-btn:hover {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        body.space-theme h2, body.space-theme h3, body.space-theme label {
+            color: #e0e0ff !important;
+        }
+
+        body.space-theme .welcome-screen p, body.space-theme .input-group label {
+            color: #b0b0d0 !important;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ========== DASHBOARD STATS ========== */
+        .dashboard-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 15px;
+        }
+
+        .dashboard-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .chart-container {
+            margin: 15px 0;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-label {
+            min-width: 60px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 25px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .bar-fill.success { background: linear-gradient(90deg, var(--success), #55efc4); }
+        .bar-fill.warning { background: linear-gradient(90deg, var(--warning), #ffeaa7); color: var(--dark); }
+        .bar-fill.danger { background: linear-gradient(90deg, var(--danger), #ff7675); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* ========== CERTIFICATE ========== */
+        .certificate-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            padding: 20px;
+        }
+
+        .certificate-modal.active {
+            display: flex;
+        }
+
+        .certificate-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            text-align: center;
+        }
+
+        .certificate-canvas {
+            max-width: 100%;
+            border: 3px solid var(--warning);
+            border-radius: 10px;
+        }
+
+        .certificate-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        /* Mode sélection de jeu */
+        .game-mode-selector {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-mode-btn {
+            padding: 12px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            background: white;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .game-mode-btn:hover, .game-mode-btn.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        .game-mode-btn .mode-icon {
+            font-size: 1.5rem;
+        }
+
+        .game-mode-btn .mode-name {
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -988,6 +1404,9 @@
         Mode hors-ligne
     </div>
 
+    <!-- Stars for Space Theme -->
+    <div class="stars" id="stars-container"></div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -1001,7 +1420,10 @@
 
         <!-- Welcome Screen -->
         <div class="screen welcome-screen active" id="welcome-screen">
-            <div class="emoji">🎮</div>
+            <div class="avatar-display" id="welcome-avatar">
+                <div class="avatar-emoji" id="avatar-emoji">🥚</div>
+                <div class="avatar-title" id="avatar-title">Œuf</div>
+            </div>
             <h2>Prêt à jouer ?</h2>
 
             <div class="input-group">
@@ -1060,6 +1482,17 @@
                 </div>
             </div>
 
+            <div class="game-mode-selector">
+                <button class="game-mode-btn selected" id="mode-solo" onclick="selectGameMode('solo')">
+                    <span class="mode-icon">🎮</span>
+                    <span class="mode-name">Solo</span>
+                </button>
+                <button class="game-mode-btn" id="mode-duel" onclick="selectGameMode('duel')">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">Duel</span>
+                </button>
+            </div>
+
             <button class="btn" onclick="startGame()">Commencer !</button>
 
             <div class="nav-buttons">
@@ -1074,11 +1507,15 @@
                 <div class="timer-fill" id="timer-fill"></div>
             </div>
 
-            <div class="combo-display" id="combo-display"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+                <div class="combo-display" id="combo-display"></div>
+                <div id="game-avatar-mini" class="avatar-mini">🥚</div>
+            </div>
 
             <div class="question" id="question">
                 <span id="num1">?</span> <span class="operator">×</span> <span id="num2">?</span> = <span id="answer-preview">?</span>
             </div>
+            <div class="boss-multiplier" id="boss-multiplier" style="display: none;">Points x3 !</div>
 
             <input type="number" class="answer-input" id="answer-input" inputmode="numeric" pattern="[0-9]*" autofocus>
 
@@ -1110,6 +1547,62 @@
                 <button class="numpad-btn clear" onclick="clearAnswer()">C</button>
                 <button class="numpad-btn" onclick="addDigit(0)">0</button>
                 <button class="numpad-btn submit" onclick="submitAnswer()">✓</button>
+            </div>
+        </div>
+
+        <!-- Duel Screen -->
+        <div class="screen duel-screen" id="duel-screen">
+            <div class="duel-container">
+                <div class="duel-player player1" id="duel-player1">
+                    <div class="duel-player-name" id="duel-name1">Joueur 1</div>
+                    <div class="duel-score" id="duel-score1">0</div>
+                    <div class="duel-question" id="duel-question">? × ? = ?</div>
+                    <input type="number" class="answer-input" id="duel-answer1" inputmode="numeric" placeholder="Joueur 1">
+                    <div class="duel-numpad" id="numpad1">
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 7)">7</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 8)">8</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 9)">9</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 4)">4</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 5)">5</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 6)">6</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 1)">1</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 2)">2</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 3)">3</button>
+                        <button class="numpad-btn clear" onclick="duelClear(1)">C</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(1, 0)">0</button>
+                        <button class="numpad-btn submit" onclick="duelSubmit(1)">✓</button>
+                    </div>
+                </div>
+                <div class="duel-vs">VS</div>
+                <div class="duel-player player2" id="duel-player2">
+                    <div class="duel-player-name" id="duel-name2">Joueur 2</div>
+                    <div class="duel-score" id="duel-score2">0</div>
+                    <div class="duel-numpad" id="numpad2">
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 7)">7</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 8)">8</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 9)">9</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 4)">4</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 5)">5</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 6)">6</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 1)">1</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 2)">2</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 3)">3</button>
+                        <button class="numpad-btn clear" onclick="duelClear(2)">C</button>
+                        <button class="numpad-btn" onclick="duelAddDigit(2, 0)">0</button>
+                        <button class="numpad-btn submit" onclick="duelSubmit(2)">✓</button>
+                    </div>
+                    <input type="number" class="answer-input" id="duel-answer2" inputmode="numeric" placeholder="Joueur 2">
+                </div>
+            </div>
+        </div>
+
+        <!-- Duel Result Overlay -->
+        <div class="duel-result-overlay" id="duel-result-overlay">
+            <div class="duel-result-content">
+                <h2 id="duel-winner-text">🏆 Joueur 1 gagne !</h2>
+                <p id="duel-final-scores">5 - 3</p>
+                <button class="btn" onclick="startDuel()">Revanche</button>
+                <button class="btn btn-secondary" onclick="endDuel()">Menu</button>
             </div>
         </div>
 
@@ -1147,6 +1640,18 @@
 
             <button class="btn" onclick="startGame()">Rejouer</button>
             <button class="btn btn-secondary" onclick="showWelcome()">Menu</button>
+            <button class="btn btn-warning" id="certificate-btn" onclick="generateCertificate()" style="display: none;">🏅 Obtenir mon Certificat</button>
+        </div>
+
+        <!-- Certificate Modal -->
+        <div class="certificate-modal" id="certificate-modal">
+            <div class="certificate-content">
+                <canvas id="certificate-canvas" width="800" height="600" class="certificate-canvas"></canvas>
+                <div class="certificate-buttons">
+                    <button class="btn" onclick="downloadCertificate()">📥 Télécharger</button>
+                    <button class="btn btn-secondary" onclick="closeCertificate()">Fermer</button>
+                </div>
+            </div>
         </div>
 
         <!-- Badges Screen -->
@@ -1206,9 +1711,23 @@
 
             <div class="history-list" id="history-list"></div>
 
+            <!-- Dashboard Enseignant -->
+            <div class="dashboard-section" id="class-dashboard" style="display: none;">
+                <h3>📈 Statistiques de Classe</h3>
+
+                <h4 style="margin-top: 15px; color: var(--success);">✅ Tables les plus maîtrisées</h4>
+                <div class="chart-container" id="best-tables-chart"></div>
+
+                <h4 style="margin-top: 15px; color: var(--danger);">❌ Tables à travailler</h4>
+                <div class="chart-container" id="worst-tables-chart"></div>
+
+                <div class="stats-grid" id="class-stats-grid"></div>
+            </div>
+
             <div class="export-buttons">
                 <button class="btn btn-small btn-secondary" onclick="exportCSV()">Exporter CSV</button>
                 <button class="btn btn-small btn-warning" onclick="exportJSON()">Exporter JSON</button>
+                <button class="btn btn-small" onclick="toggleClassDashboard()" style="background: var(--primary); color: white;">📊 Stats Classe</button>
             </div>
 
             <button class="btn" onclick="showWelcome()">Retour</button>
@@ -1259,7 +1778,27 @@
             lastPlayDate: null,
             dailyGoal: 500,
             dailyProgress: 0,
-            questionsHistory: []
+            questionsHistory: [],
+            // New: Error tracking for Boss system
+            errorTrack: {},
+            currentIsBoss: false,
+            // New: Game mode
+            gameMode: 'solo',
+            // New: Space theme
+            spaceThemeActive: false
+        };
+
+        // Duel State
+        let duelState = {
+            active: false,
+            num1: 0,
+            num2: 0,
+            answer1: '',
+            answer2: '',
+            score1: 0,
+            score2: 0,
+            rounds: 0,
+            maxRounds: 10
         };
 
         // Badge Definitions
@@ -1283,6 +1822,478 @@
 
         // XP required per level
         const xpPerLevel = (level) => Math.floor(100 * Math.pow(1.5, level - 1));
+
+        // ========== AVATAR SYSTEM ==========
+        const avatarLevels = [
+            { minLevel: 1, emoji: '🥚', name: 'Œuf' },
+            { minLevel: 6, emoji: '🕷️', name: 'Araignée' },
+            { minLevel: 11, emoji: '🐆', name: 'Guépard' },
+            { minLevel: 21, emoji: '🦁', name: 'Lion' },
+            { minLevel: 31, emoji: '🔥', name: 'Phénix' }
+        ];
+
+        function getAvatar(level) {
+            let avatar = avatarLevels[0];
+            for (const a of avatarLevels) {
+                if (level >= a.minLevel) avatar = a;
+            }
+            return avatar;
+        }
+
+        function updateAvatarDisplay() {
+            const avatar = getAvatar(gameState.level);
+            document.getElementById('avatar-emoji').textContent = avatar.emoji;
+            document.getElementById('avatar-title').textContent = avatar.name + ' (Niv. ' + gameState.level + ')';
+            document.getElementById('game-avatar-mini').textContent = avatar.emoji;
+        }
+
+        // ========== WEB AUDIO API SOUNDS ==========
+        let audioContext = null;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            const now = audioContext.currentTime;
+
+            switch(type) {
+                case 'correct':
+                    // Ping montant pour combo
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(400 + (gameState.combo * 50), now);
+                    oscillator.frequency.exponentialRampToValueAtTime(800 + (gameState.combo * 50), now + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.2);
+                    break;
+
+                case 'wrong':
+                    // Buzzer pour erreur
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(150, now);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.3);
+                    break;
+
+                case 'levelup':
+                    // Fanfare pour level up
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((freq, i) => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + i * 0.15);
+                        gain.gain.setValueAtTime(0.3, now + i * 0.15);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.3);
+                        osc.start(now + i * 0.15);
+                        osc.stop(now + i * 0.15 + 0.3);
+                    });
+                    break;
+
+                case 'boss':
+                    // Son dramatique pour boss
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(100, now);
+                    oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.5);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.5);
+                    break;
+
+                case 'duel-win':
+                    // Son victoire duel
+                    const winNotes = [523.25, 783.99, 1046.50];
+                    winNotes.forEach((freq, i) => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                        gain.gain.setValueAtTime(0.4, now + i * 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+                        osc.start(now + i * 0.1);
+                        osc.stop(now + i * 0.1 + 0.2);
+                    });
+                    break;
+            }
+        }
+
+        // ========== SPACE THEME ==========
+        function activateSpaceTheme() {
+            if (gameState.spaceThemeActive) return;
+            gameState.spaceThemeActive = true;
+            document.body.classList.add('space-theme');
+            createStars();
+        }
+
+        function deactivateSpaceTheme() {
+            gameState.spaceThemeActive = false;
+            document.body.classList.remove('space-theme');
+            document.getElementById('stars-container').innerHTML = '';
+        }
+
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = (Math.random() * 3 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // ========== BOSS SYSTEM ==========
+        function getQuestionKey(num1, num2) {
+            return Math.min(num1, num2) + 'x' + Math.max(num1, num2);
+        }
+
+        function trackError(num1, num2) {
+            const key = getQuestionKey(num1, num2);
+            if (!gameState.errorTrack[key]) {
+                gameState.errorTrack[key] = 0;
+            }
+            gameState.errorTrack[key]++;
+            saveGameState();
+        }
+
+        function isBossQuestion(num1, num2) {
+            const key = getQuestionKey(num1, num2);
+            return gameState.errorTrack[key] >= 3;
+        }
+
+        function clearBossStatus(num1, num2) {
+            const key = getQuestionKey(num1, num2);
+            if (gameState.errorTrack[key]) {
+                gameState.errorTrack[key] = Math.max(0, gameState.errorTrack[key] - 1);
+                saveGameState();
+            }
+        }
+
+        // ========== GAME MODE SELECTION ==========
+        function selectGameMode(mode) {
+            gameState.gameMode = mode;
+            document.querySelectorAll('.game-mode-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('mode-' + mode).classList.add('selected');
+        }
+
+        // ========== DUEL MODE ==========
+        function startDuel() {
+            initAudio();
+            duelState = {
+                active: true,
+                num1: 0,
+                num2: 0,
+                answer1: '',
+                answer2: '',
+                score1: 0,
+                score2: 0,
+                rounds: 0,
+                maxRounds: 10
+            };
+
+            document.getElementById('duel-name1').textContent = gameState.playerName || 'Joueur 1';
+            document.getElementById('duel-name2').textContent = 'Adversaire';
+            document.getElementById('duel-score1').textContent = '0';
+            document.getElementById('duel-score2').textContent = '0';
+            document.getElementById('duel-result-overlay').classList.remove('active');
+
+            showScreen('duel-screen');
+            generateDuelQuestion();
+        }
+
+        function generateDuelQuestion() {
+            if (duelState.rounds >= duelState.maxRounds) {
+                endDuelGame();
+                return;
+            }
+
+            const tables = gameState.selectedTables;
+            duelState.num1 = tables[Math.floor(Math.random() * tables.length)];
+            duelState.num2 = Math.floor(Math.random() * 10) + 1;
+            duelState.answer1 = '';
+            duelState.answer2 = '';
+
+            document.getElementById('duel-question').textContent =
+                duelState.num1 + ' × ' + duelState.num2 + ' = ?';
+            document.getElementById('duel-answer1').value = '';
+            document.getElementById('duel-answer2').value = '';
+
+            document.getElementById('duel-player1').classList.remove('winner');
+            document.getElementById('duel-player2').classList.remove('winner');
+        }
+
+        function duelAddDigit(player, digit) {
+            if (player === 1) {
+                if (duelState.answer1.length < 3) {
+                    duelState.answer1 += digit;
+                    document.getElementById('duel-answer1').value = duelState.answer1;
+                }
+            } else {
+                if (duelState.answer2.length < 3) {
+                    duelState.answer2 += digit;
+                    document.getElementById('duel-answer2').value = duelState.answer2;
+                }
+            }
+        }
+
+        function duelClear(player) {
+            if (player === 1) {
+                duelState.answer1 = '';
+                document.getElementById('duel-answer1').value = '';
+            } else {
+                duelState.answer2 = '';
+                document.getElementById('duel-answer2').value = '';
+            }
+        }
+
+        function duelSubmit(player) {
+            const correctAnswer = duelState.num1 * duelState.num2;
+            const userAnswer = parseInt(player === 1 ? duelState.answer1 : duelState.answer2);
+
+            if (isNaN(userAnswer)) return;
+
+            if (userAnswer === correctAnswer) {
+                playSound('duel-win');
+                if (player === 1) {
+                    duelState.score1++;
+                    document.getElementById('duel-score1').textContent = duelState.score1;
+                    document.getElementById('duel-player1').classList.add('winner');
+                } else {
+                    duelState.score2++;
+                    document.getElementById('duel-score2').textContent = duelState.score2;
+                    document.getElementById('duel-player2').classList.add('winner');
+                }
+
+                duelState.rounds++;
+                setTimeout(generateDuelQuestion, 1000);
+            } else {
+                playSound('wrong');
+                duelClear(player);
+            }
+        }
+
+        function endDuelGame() {
+            duelState.active = false;
+
+            let winnerText;
+            if (duelState.score1 > duelState.score2) {
+                winnerText = '🏆 ' + (gameState.playerName || 'Joueur 1') + ' gagne !';
+            } else if (duelState.score2 > duelState.score1) {
+                winnerText = '🏆 Adversaire gagne !';
+            } else {
+                winnerText = '🤝 Égalité !';
+            }
+
+            document.getElementById('duel-winner-text').textContent = winnerText;
+            document.getElementById('duel-final-scores').textContent = duelState.score1 + ' - ' + duelState.score2;
+            document.getElementById('duel-result-overlay').classList.add('active');
+
+            playSound('levelup');
+        }
+
+        function endDuel() {
+            document.getElementById('duel-result-overlay').classList.remove('active');
+            deactivateSpaceTheme();
+            showWelcome();
+        }
+
+        // ========== CLASS DASHBOARD ==========
+        function toggleClassDashboard() {
+            const dashboard = document.getElementById('class-dashboard');
+            if (dashboard.style.display === 'none') {
+                dashboard.style.display = 'block';
+                generateClassStats();
+            } else {
+                dashboard.style.display = 'none';
+            }
+        }
+
+        function generateClassStats() {
+            // Analyser toutes les questions de l'historique
+            const tableStats = {};
+            let totalCorrect = 0;
+            let totalWrong = 0;
+
+            gameState.gameHistory.forEach(game => {
+                if (game.questions) {
+                    game.questions.forEach(q => {
+                        const key = q.num1 + '×' + q.num2;
+                        if (!tableStats[key]) {
+                            tableStats[key] = { correct: 0, wrong: 0, table: Math.min(q.num1, q.num2) };
+                        }
+                        if (q.isCorrect) {
+                            tableStats[key].correct++;
+                            totalCorrect++;
+                        } else {
+                            tableStats[key].wrong++;
+                            totalWrong++;
+                        }
+                    });
+                }
+            });
+
+            // Convertir en tableau et trier
+            const statsArray = Object.entries(tableStats).map(([key, val]) => ({
+                name: key,
+                ...val,
+                successRate: val.correct + val.wrong > 0 ?
+                    Math.round((val.correct / (val.correct + val.wrong)) * 100) : 0
+            }));
+
+            // Trier par taux de réussite
+            const best = [...statsArray].sort((a, b) => b.successRate - a.successRate).slice(0, 5);
+            const worst = [...statsArray].sort((a, b) => a.successRate - b.successRate).slice(0, 5);
+
+            // Générer les graphiques
+            renderBarChart('best-tables-chart', best, 'success');
+            renderBarChart('worst-tables-chart', worst, 'danger');
+
+            // Stats globales
+            const totalGames = gameState.gameHistory.length;
+            const avgAccuracy = totalCorrect + totalWrong > 0 ?
+                Math.round((totalCorrect / (totalCorrect + totalWrong)) * 100) : 0;
+
+            document.getElementById('class-stats-grid').innerHTML = `
+                <div class="stat-card">
+                    <div class="value">${totalGames}</div>
+                    <div class="label">Parties jouées</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">${avgAccuracy}%</div>
+                    <div class="label">Précision moyenne</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">${totalCorrect}</div>
+                    <div class="label">Réponses correctes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">${Object.keys(tableStats).length}</div>
+                    <div class="label">Multiplications tentées</div>
+                </div>
+            `;
+        }
+
+        function renderBarChart(containerId, data, colorClass) {
+            const container = document.getElementById(containerId);
+            const maxRate = 100;
+
+            container.innerHTML = '<div class="bar-chart">' +
+                data.map(item => `
+                    <div class="bar-item">
+                        <div class="bar-label">${item.name}</div>
+                        <div class="bar-track">
+                            <div class="bar-fill ${colorClass}" style="width: ${item.successRate}%">
+                                ${item.successRate}%
+                            </div>
+                        </div>
+                    </div>
+                `).join('') + '</div>';
+        }
+
+        // ========== CERTIFICATE GENERATION ==========
+        function generateCertificate() {
+            const canvas = document.getElementById('certificate-canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            const gradient = ctx.createLinearGradient(0, 0, 800, 600);
+            gradient.addColorStop(0, '#ffecd2');
+            gradient.addColorStop(1, '#fcb69f');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 800, 600);
+
+            // Border
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 15;
+            ctx.strokeRect(20, 20, 760, 560);
+            ctx.strokeStyle = '#8b7355';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(35, 35, 730, 530);
+
+            // Title
+            ctx.fillStyle = '#2d3436';
+            ctx.font = 'bold 48px Georgia';
+            ctx.textAlign = 'center';
+            ctx.fillText('🏆 CERTIFICAT 🏆', 400, 100);
+
+            ctx.font = '32px Georgia';
+            ctx.fillText("D'EXCELLENCE", 400, 145);
+
+            // Subtitle
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#636e72';
+            ctx.fillText('Tables de Multiplication', 400, 200);
+
+            // Name
+            ctx.font = 'bold 36px Georgia';
+            ctx.fillStyle = '#6c5ce7';
+            ctx.fillText(gameState.playerName || 'Champion', 400, 280);
+
+            // Achievement
+            ctx.font = '22px Arial';
+            ctx.fillStyle = '#2d3436';
+            ctx.fillText('a brillamment réussi un', 400, 340);
+
+            ctx.font = 'bold 32px Georgia';
+            ctx.fillStyle = '#00b894';
+            ctx.fillText('20/20 en mode Difficile', 400, 390);
+
+            // Date
+            ctx.font = '18px Arial';
+            ctx.fillStyle = '#636e72';
+            const date = new Date().toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            ctx.fillText('Le ' + date, 400, 460);
+
+            // Stats
+            ctx.font = '16px Arial';
+            ctx.fillText(`Score: ${gameState.currentScore} pts | Combo max: ${gameState.maxCombo}`, 400, 500);
+
+            // Avatar
+            ctx.font = '60px Arial';
+            ctx.fillText(getAvatar(gameState.level).emoji, 400, 560);
+
+            document.getElementById('certificate-modal').classList.add('active');
+        }
+
+        function downloadCertificate() {
+            const canvas = document.getElementById('certificate-canvas');
+            const link = document.createElement('a');
+            link.download = 'certificat_' + (gameState.playerName || 'eleve') + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function closeCertificate() {
+            document.getElementById('certificate-modal').classList.remove('active');
+        }
 
         // PWA Installation
         let deferredPrompt;
@@ -1333,6 +2344,7 @@
             updateHeader();
             updateStreak();
             updatePowerupDisplay();
+            updateAvatarDisplay();
 
             // Check offline status on load
             if (!navigator.onLine) {
@@ -1356,6 +2368,7 @@
                 gameState.streak = data.streak || 0;
                 gameState.lastPlayDate = data.lastPlayDate;
                 gameState.powerups = data.powerups || { freeze: 3, double: 2, skip: 1 };
+                gameState.errorTrack = data.errorTrack || {};
 
                 document.getElementById('player-name').value = gameState.playerName;
                 document.getElementById('player-class').value = gameState.playerClass;
@@ -1374,7 +2387,8 @@
                 gameHistory: gameState.gameHistory,
                 streak: gameState.streak,
                 lastPlayDate: gameState.lastPlayDate,
-                powerups: gameState.powerups
+                powerups: gameState.powerups,
+                errorTrack: gameState.errorTrack
             };
             localStorage.setItem('multiplicationGame', JSON.stringify(data));
         }
@@ -1406,6 +2420,9 @@
 
         // Start Game
         function startGame() {
+            // Initialize audio on user interaction
+            initAudio();
+
             gameState.playerName = document.getElementById('player-name').value.trim() || 'Joueur';
             gameState.playerClass = document.getElementById('player-class').value.trim() || '';
 
@@ -1416,6 +2433,12 @@
 
             if (gameState.selectedTables.length === 0) {
                 alert('Sélectionne au moins une table !');
+                return;
+            }
+
+            // Check game mode
+            if (gameState.gameMode === 'duel') {
+                startDuel();
                 return;
             }
 
@@ -1434,6 +2457,10 @@
             gameState.wrongAnswers = 0;
             gameState.dailyProgress = 0;
             gameState.questionsHistory = [];
+            gameState.currentIsBoss = false;
+
+            // Deactivate space theme at start
+            deactivateSpaceTheme();
 
             showScreen('game-screen');
             generateQuestion();
@@ -1448,6 +2475,20 @@
             gameState.currentNum1 = table;
             gameState.currentNum2 = multiplier;
             gameState.currentAnswer = '';
+
+            // Check if this is a Boss question
+            gameState.currentIsBoss = isBossQuestion(table, multiplier);
+            const questionEl = document.getElementById('question');
+            const bossMultiplier = document.getElementById('boss-multiplier');
+
+            if (gameState.currentIsBoss) {
+                questionEl.classList.add('boss-mode');
+                bossMultiplier.style.display = 'block';
+                playSound('boss');
+            } else {
+                questionEl.classList.remove('boss-mode');
+                bossMultiplier.style.display = 'none';
+            }
 
             document.getElementById('num1').textContent = table;
             document.getElementById('num2').textContent = multiplier;
@@ -1567,9 +2608,18 @@
             const input = document.getElementById('answer-input');
             input.classList.add('correct');
 
+            // Play correct sound
+            playSound('correct');
+
             let points = 10;
             const timeBonus = Math.floor(gameState.timeRemaining * 2);
             points += timeBonus;
+
+            // Boss multiplier (x3)
+            if (gameState.currentIsBoss) {
+                points *= 3;
+                clearBossStatus(gameState.currentNum1, gameState.currentNum2);
+            }
 
             gameState.combo++;
             if (gameState.combo > gameState.maxCombo) {
@@ -1579,6 +2629,11 @@
             // Vérifier si on doit afficher un encouragement
             checkEncouragement(gameState.combo);
 
+            // Activate space theme on DIVIN (combo 30)
+            if (gameState.combo >= 30) {
+                activateSpaceTheme();
+            }
+
             const comboMultiplier = 1 + (gameState.combo * 0.1);
             points = Math.floor(points * comboMultiplier);
 
@@ -1587,7 +2642,7 @@
                 gameState.isDoublePoints = false;
                 showFloatingPoints(points, 'bonus');
             } else {
-                showFloatingPoints(points, 'positive');
+                showFloatingPoints(points, gameState.currentIsBoss ? 'bonus' : 'positive');
             }
 
             gameState.currentScore += points;
@@ -1709,6 +2764,17 @@
             const input = document.getElementById('answer-input');
             input.classList.add('wrong');
 
+            // Play wrong sound
+            playSound('wrong');
+
+            // Track error for Boss system
+            trackError(gameState.currentNum1, gameState.currentNum2);
+
+            // Deactivate space theme on error
+            if (gameState.spaceThemeActive) {
+                deactivateSpaceTheme();
+            }
+
             gameState.combo = 0;
             gameState.wrongAnswers++;
 
@@ -1772,6 +2838,9 @@
             gameState.level++;
             document.getElementById('new-level').textContent = gameState.level;
 
+            // Play fanfare sound
+            playSound('levelup');
+
             let reward = '';
             if (gameState.level % 5 === 0) {
                 gameState.powerups.freeze++;
@@ -1786,6 +2855,13 @@
                 reward = '+1 Double points !';
             }
 
+            // Check for avatar evolution
+            const newAvatar = getAvatar(gameState.level);
+            const oldAvatar = getAvatar(gameState.level - 1);
+            if (newAvatar.emoji !== oldAvatar.emoji) {
+                reward += ' Nouvelle forme : ' + newAvatar.emoji + ' ' + newAvatar.name + ' !';
+            }
+
             document.getElementById('level-reward').textContent = reward;
 
             const overlay = document.getElementById('level-up-overlay');
@@ -1798,6 +2874,7 @@
             }, 2000);
 
             updatePowerupDisplay();
+            updateAvatarDisplay();
             saveGameState();
         }
 
@@ -1918,6 +2995,9 @@
         function showResults(newBadges) {
             showScreen('results-screen');
 
+            // Deactivate space theme when game ends
+            deactivateSpaceTheme();
+
             document.getElementById('final-score').textContent = gameState.currentScore;
             document.getElementById('correct-answers').textContent = gameState.correctAnswers;
             document.getElementById('wrong-answers').textContent = gameState.wrongAnswers;
@@ -1929,6 +3009,17 @@
 
             const xpEarned = Math.floor(gameState.currentScore / 5);
             document.getElementById('xp-earned').textContent = xpEarned;
+
+            // Show certificate button if 20/20 in hard mode or higher
+            const isPerfect = gameState.wrongAnswers === 0 && gameState.correctAnswers >= 20;
+            const isHardMode = gameState.difficulty === 'hard' || gameState.difficulty === 'extreme';
+            const certBtn = document.getElementById('certificate-btn');
+
+            if (isPerfect && isHardMode) {
+                certBtn.style.display = 'block';
+            } else {
+                certBtn.style.display = 'none';
+            }
 
             const badgesContainer = document.getElementById('new-badges');
             badgesContainer.innerHTML = '';
@@ -1945,6 +3036,7 @@
             }
 
             updateHeader();
+            updateAvatarDisplay();
         }
 
         // Show Badges Screen
