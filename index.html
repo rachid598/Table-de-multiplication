@@ -1462,6 +1462,9 @@
                     <input type="checkbox" class="table-checkbox" id="table-12" value="12">
                     <label class="table-label" for="table-12">12</label>
                 </div>
+                <div id="xp-indicator" style="margin-top: 8px; font-size: 0.85rem; color: var(--danger); font-weight: bold;">
+                    ⚠️ Minimum 6 tables pour gagner de l'XP
+                </div>
             </div>
 
             <div class="input-group">
@@ -2785,9 +2788,35 @@
             setTimeout(() => element.remove(), 1000);
         }
 
-        // XP System
+        // XP System - XP scales with number of tables and difficulty
+        function getXPMultiplier() {
+            const numTables = gameState.selectedTables.length;
+            const totalTables = 11; // Tables 2-12
+
+            // Moins de 6 tables = pas d'XP
+            if (numTables < 6) return 0;
+
+            // Base: proportion des tables sélectionnées
+            let multiplier = numTables / totalTables;
+
+            // Bonus difficulté
+            switch(gameState.difficulty) {
+                case 'easy': multiplier *= 0.5; break;
+                case 'medium': multiplier *= 1; break;
+                case 'hard': multiplier *= 1.5; break;
+                case 'extreme': multiplier *= 2; break;
+            }
+
+            return multiplier;
+        }
+
         function addXP(amount) {
-            gameState.xp += amount;
+            const multiplier = getXPMultiplier();
+            const adjustedAmount = Math.floor(amount * multiplier);
+
+            if (adjustedAmount <= 0) return; // Pas d'XP si pas assez de tables
+
+            gameState.xp += adjustedAmount;
 
             const requiredXP = xpPerLevel(gameState.level);
             while (gameState.xp >= requiredXP) {
@@ -3263,8 +3292,38 @@
             }
         }
 
+        // Update XP indicator based on selected tables and difficulty
+        function updateXPIndicator() {
+            const numTables = document.querySelectorAll('.table-checkbox:checked').length;
+            const difficulty = document.getElementById('difficulty').value;
+            const indicator = document.getElementById('xp-indicator');
+
+            if (numTables < 6) {
+                indicator.style.color = 'var(--danger)';
+                indicator.innerHTML = '⚠️ Minimum 6 tables pour gagner de l\'XP';
+            } else {
+                let multiplier = numTables / 11;
+                switch(difficulty) {
+                    case 'easy': multiplier *= 0.5; break;
+                    case 'medium': multiplier *= 1; break;
+                    case 'hard': multiplier *= 1.5; break;
+                    case 'extreme': multiplier *= 2; break;
+                }
+                const percent = Math.round(multiplier * 100);
+                indicator.style.color = percent >= 100 ? 'var(--success)' : 'var(--warning)';
+                indicator.innerHTML = `✨ Bonus XP : ${percent}%`;
+            }
+        }
+
+        // Event listeners for XP indicator
+        document.querySelectorAll('.table-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateXPIndicator);
+        });
+        document.getElementById('difficulty').addEventListener('change', updateXPIndicator);
+
         // Initialize on load
         init();
+        updateXPIndicator();
     </script>
 </body>
 </html>
