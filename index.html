@@ -100,10 +100,6 @@
             display: block;
         }
 
-        .duel-screen.active {
-            display: flex;
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1048,7 +1044,7 @@
         }
 
         /* ========== DUEL MODE ========== */
-        .duel-screen {
+        .duel-screen.active {
             display: flex;
             flex-direction: column;
             align-items: center;
