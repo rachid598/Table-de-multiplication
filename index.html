@@ -2657,54 +2657,18 @@
             }, 500);
         }
 
-        // Messages d'encouragement par combo (paliers espacés)
-        const encouragements = {
-            5: {
-                emoji: '🔥',
-                text: 'EN FEU !',
-                subtext: '5 d\'affilée ! Continue !',
-                color: '#ff6b35',
-                reward: null
-            },
-            10: {
-                emoji: '🕷️',
-                text: 'TIÉ UNE ARAIGNÉE !',
-                subtext: 'Malin et rapide ! +1 ❄️',
-                color: '#e63946',
-                reward: { type: 'freeze', amount: 1 }
-            },
-            15: {
-                emoji: '🐆',
-                text: 'TIÉ UN GUÉPARD !',
-                subtext: 'Rapide comme l\'éclair ! +1 ⭐',
-                color: '#ffa500',
-                reward: { type: 'double', amount: 1 }
-            },
-            20: {
-                emoji: '🦁',
-                text: 'TIÉ UN LION !',
-                subtext: 'Le roi de la savane ! +1 ⏭️',
-                color: '#daa520',
-                reward: { type: 'skip', amount: 1 }
-            },
-            30: {
-                emoji: '✨',
-                text: 'DIVIN !',
-                subtext: 'Personne ne peut t\'arrêter ! +2 de chaque !',
-                color: '#9b59b6',
-                reward: { type: 'all', amount: 2 }
-            }
+        // Récompenses par combo (sans popup)
+        const comboRewards = {
+            10: { type: 'freeze', amount: 1 },
+            15: { type: 'double', amount: 1 },
+            20: { type: 'skip', amount: 1 },
+            30: { type: 'all', amount: 2 }
         };
 
         function checkEncouragement(combo) {
-            if (encouragements[combo]) {
-                const data = encouragements[combo];
-                showEncouragement(data);
-
-                // Donner la récompense
-                if (data.reward) {
-                    giveReward(data.reward);
-                }
+            // Donner la récompense silencieusement
+            if (comboRewards[combo]) {
+                giveReward(comboRewards[combo]);
             }
         }
 
